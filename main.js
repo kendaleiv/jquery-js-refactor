@@ -1,5 +1,5 @@
 (function ($) {
-    $(document).ready(function () {
+    $(function () {
         $('#fetch').click(function () {
             var stockSymbol = $.trim($('#stock-symbol').val().toUpperCase());
 
