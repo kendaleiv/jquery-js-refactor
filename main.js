@@ -1,6 +1,6 @@
 (function ($) {
     $(function () {
-        $('#fetch').click(function () {
+        $('#fetch').on('click', function () {
             var stockSymbol = $.trim($('#stock-symbol').val().toUpperCase());
 
             $.ajax('http://query.yahooapis.com/v1/public/yql?q=select * from yahoo.finance.quotes where symbol in ("' + stockSymbol + '")&diagnostics=true&env=http://datatables.org/alltables.env', {
