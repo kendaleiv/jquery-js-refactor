@@ -14,9 +14,10 @@
             }).done(function (res) {
                 var quote = $(res).find('[symbol="' + stockSymbol + '"]');
                 var lastTradePrice = quote.find('LastTradePriceOnly').text();
+                var dateString = new Date().toString();
 
-                $currentStockPrice.html('<strong>' + stockSymbol + '</strong>: $' + lastTradePrice + ' retrieved at ' + new Date().toString());
-                $stockPriceLog.html($stockPriceLog.html() + '<li><strong>' + stockSymbol + '</strong> $' + lastTradePrice + ' retrieved at ' + new Date().toString() + '</li>');
+                $currentStockPrice.html('<strong>' + stockSymbol + '</strong>: $' + lastTradePrice + ' retrieved at ' + dateString);
+                $stockPriceLog.html($stockPriceLog.html() + '<li><strong>' + stockSymbol + '</strong> $' + lastTradePrice + ' retrieved at ' + dateString + '</li>');
             });
         });
     });
