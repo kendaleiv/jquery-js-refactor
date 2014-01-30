@@ -7,17 +7,19 @@
                 throw new Error('Must provide a stockSymbol.');
             }
 
-            var deferred = $.Deferred();
+            var promise = $.Deferred(function (deferred) {
+                var url = 'http://query.yahooapis.com/v1/public/yql?q=select * from yahoo.finance.quotes where symbol in ("' + stockSymbol + '")&diagnostics=true&env=http://datatables.org/alltables.env';
+                $.ajax(url).done(function (res) {
+                    var quote = $(res).find('[symbol="' + stockSymbol + '"]');
+                    var lastTradePrice = quote.find('LastTradePriceOnly').text();
+    
+                    deferred.resolve(lastTradePrice);
+                }).fail(function (jqXHR) {
+                    deferred.reject(jqXHR);
+                });
+            }).promise();
 
-            var url = 'http://query.yahooapis.com/v1/public/yql?q=select * from yahoo.finance.quotes where symbol in ("' + stockSymbol + '")&diagnostics=true&env=http://datatables.org/alltables.env';
-            $.ajax(url).done(function (res) {
-                var quote = $(res).find('[symbol="' + stockSymbol + '"]');
-                var lastTradePrice = quote.find('LastTradePriceOnly').text();
-
-                deferred.resolve(lastTradePrice);
-            });
-
-            return deferred.promise();
+            return promise;
         }
     };
 })(jQuery);
@@ -69,8 +71,10 @@
 
             uiProvider.displayLoading();
 
-            dataProvider.getStockPrice(stockSymbol).done(function (lastTradePrice) {
+            dataProvider.getStockPrice(stockSymbol).then(function (lastTradePrice) {
                 uiProvider.setStockPrice(stockSymbol, lastTradePrice);
+            }).fail(function (jqXHR) {
+                uiProvider.setStockPrice(stockSymbol, '(n/a)');
             });
         }
     };
