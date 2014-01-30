@@ -1,4 +1,6 @@
 (function ($) {
+    'use strict';
+
     $(function () {
         var $stockSymbol = $('#stock-symbol');
         var $currentStockPrice = $('#current-stock-price');
