@@ -76,23 +76,32 @@ describe('uiProvider', function () {
 
 describe('stockRetriever', function () {
     var stockRetriever = window.stockRetriever;
-    var dataProvider = window.dataProvider;
-    var uiProvider = window.uiProvider;
 
-    beforeEach(function () {
-        spyOn(dataProvider, 'getStockPrice').and.returnValue({
-            done: function (callback) {
-                callback(1000.00);
-            }
+    describe('init', function () {
+        it('should create click handler on fetchButton selector', function () {
+            var selectors = stockRetriever.configuration.selectors;
+            spyOn(selectors.fetchButton, 'on');
+
+            stockRetriever.init();
+            expect(selectors.fetchButton.on).toHaveBeenCalledWith('click', stockRetriever.fetch);
         });
-
-        spyOn(uiProvider, 'displayLoading');
-        spyOn(uiProvider, 'getStockSymbol').and.returnValue('GOOG');
-        spyOn(uiProvider, 'setStockPrice');
     });
 
     describe('fetch', function () {
+        var dataProvider = window.dataProvider;
+        var uiProvider = window.uiProvider;
+
         beforeEach(function () {
+            spyOn(dataProvider, 'getStockPrice').and.returnValue({
+                done: function (callback) {
+                    callback(1000.00);
+                }
+            });
+
+            spyOn(uiProvider, 'displayLoading');
+            spyOn(uiProvider, 'getStockSymbol').and.returnValue('GOOG');
+            spyOn(uiProvider, 'setStockPrice');
+
             stockRetriever.fetch();
         });
 

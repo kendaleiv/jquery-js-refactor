@@ -51,10 +51,19 @@
     };
 })(jQuery);
 
-(function (uiProvider, dataProvider) {
+(function ($, uiProvider, dataProvider) {
     'use strict';
 
     window.stockRetriever = {
+        configuration: {
+            selectors: {
+                fetchButton: $('#fetch')
+            }
+        },
+        init: function () {
+            var selectors = this.configuration.selectors;
+            selectors.fetchButton.on('click', stockRetriever.fetch);
+        },
         fetch: function () {
             var stockSymbol = uiProvider.getStockSymbol();
 
@@ -65,12 +74,10 @@
             });
         }
     };
-})(uiProvider, dataProvider);
+})(jQuery, uiProvider, dataProvider);
 
-(function ($, stockRetriever) {
+(function (stockRetriever) {
     'use strict';
 
-    $(function () {
-        $('#fetch').on('click', stockRetriever.fetch);
-    });
-})(jQuery, stockRetriever);
+    stockRetriever.init();
+})(stockRetriever);
