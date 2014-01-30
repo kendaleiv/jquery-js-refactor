@@ -92,10 +92,12 @@ describe('stockRetriever', function () {
         var uiProvider = window.uiProvider;
 
         beforeEach(function () {
-            spyOn(dataProvider, 'getStockPrice').and.returnValue({
-                done: function (callback) {
-                    callback(1000.00);
-                }
+            spyOn(dataProvider, 'getStockPrice').and.callFake(function () {
+                var promise = $.Deferred(function (deferred) {
+                    deferred.resolve(1000.00);
+                }).promise();
+
+                return promise;
             });
 
             spyOn(uiProvider, 'displayLoading');
