@@ -73,3 +73,43 @@ describe('uiProvider', function () {
         });
     });
 });
+
+describe('stockRetriever', function () {
+    var stockRetriever = window.stockRetriever;
+    var dataProvider = window.dataProvider;
+    var uiProvider = window.uiProvider;
+
+    beforeEach(function () {
+        spyOn(dataProvider, 'getStockPrice').and.returnValue({
+            done: function (callback) {
+                callback(1000.00);
+            }
+        });
+
+        spyOn(uiProvider, 'displayLoading');
+        spyOn(uiProvider, 'getStockSymbol').and.returnValue('GOOG');
+        spyOn(uiProvider, 'setStockPrice');
+    });
+
+    describe('fetch', function () {
+        beforeEach(function () {
+            stockRetriever.fetch();
+        });
+
+        it('should get stock symbol', function () {
+            expect(uiProvider.getStockSymbol).toHaveBeenCalled();
+        });
+
+        it('should display loading', function () {
+            expect(uiProvider.displayLoading).toHaveBeenCalled();
+        });
+
+        it('should get stock price', function () {
+            expect(dataProvider.getStockPrice).toHaveBeenCalledWith('GOOG');
+        });
+
+        it('should update stock price information', function () {
+            expect(uiProvider.setStockPrice).toHaveBeenCalledWith('GOOG', 1000.00);
+        });
+    });
+});

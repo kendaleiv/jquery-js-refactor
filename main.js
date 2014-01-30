@@ -51,11 +51,11 @@
     };
 })(jQuery);
 
-(function ($, dataProvider, uiProvider) {
+(function (uiProvider, dataProvider) {
     'use strict';
 
-    $(function () {
-        $('#fetch').on('click', function () {
+    window.stockRetriever = {
+        fetch: function () {
             var stockSymbol = uiProvider.getStockSymbol();
 
             uiProvider.displayLoading();
@@ -63,6 +63,14 @@
             dataProvider.getStockPrice(stockSymbol).done(function (lastTradePrice) {
                 uiProvider.setStockPrice(stockSymbol, lastTradePrice);
             });
-        });
+        }
+    };
+})(uiProvider, dataProvider);
+
+(function ($, stockRetriever) {
+    'use strict';
+
+    $(function () {
+        $('#fetch').on('click', stockRetriever.fetch);
     });
-})(jQuery, dataProvider, uiProvider);
+})(jQuery, stockRetriever);
