@@ -22,25 +22,47 @@
     };
 })(jQuery);
 
-(function ($, dataProvider) {
+(function ($) {
+    'use strict';
+
+    window.uiProvider = {
+        configuration: {
+            selectors: {
+                stockSymbol: $('#stock-symbol'),
+                currentStockPrice: $('#current-stock-price'),
+                stockPriceLog: $('#stock-price-log')
+            }
+        },
+        displayLoading: function () {
+            var selectors = this.configuration.selectors;
+            selectors.currentStockPrice.html('Loading ...');
+        },
+        getStockSymbol: function () {
+            var selectors = this.configuration.selectors;
+            return $.trim(selectors.stockSymbol.val().toUpperCase());
+        },
+        setStockPrice: function (stockSymbol, price) {
+            var dateString = new Date().toString();
+
+            var selectors = this.configuration.selectors;
+            selectors.currentStockPrice.html('<strong>' + stockSymbol + '</strong>: $' + price + ' retrieved at ' + dateString);
+            selectors.stockPriceLog.html(selectors.stockPriceLog.html() + '<li><strong>' + stockSymbol + '</strong> $' + price + ' retrieved at ' + dateString + '</li>');
+        }
+    };
+})(jQuery);
+
+(function ($, dataProvider, uiProvider) {
     'use strict';
 
     $(function () {
-        var $stockSymbol = $('#stock-symbol');
-        var $currentStockPrice = $('#current-stock-price');
-        var $stockPriceLog = $('#stock-price-log');
-
         $('#fetch').on('click', function () {
-            var stockSymbol = $.trim($stockSymbol.val().toUpperCase());
+            var stockSymbol = uiProvider.getStockSymbol();
 
-            $currentStockPrice.html('Loading ...');
+            uiProvider.displayLoading();
 
-            dataProvider.getStockPrice(stockSymbol).done(function (lastTradePrice) {            
-                var dateString = new Date().toString();
-
-                $currentStockPrice.html('<strong>' + stockSymbol + '</strong>: $' + lastTradePrice + ' retrieved at ' + dateString);
-                $stockPriceLog.html($stockPriceLog.html() + '<li><strong>' + stockSymbol + '</strong> $' + lastTradePrice + ' retrieved at ' + dateString + '</li>');
+            dataProvider.getStockPrice(stockSymbol).done(function (lastTradePrice) {
+                uiProvider.setStockPrice(stockSymbol, lastTradePrice);
             });
         });
     });
-})(jQuery, dataProvider);
+})(jQuery, dataProvider, uiProvider);
