@@ -1,7 +1,11 @@
 (function ($) {
     'use strict';
 
-    window.dataProvider = {
+    if (!window.stockRetriever) {
+        window.stockRetriever = {};
+    }
+
+    window.stockRetriever.dataProvider = {
         getStockPrice: function (stockSymbol) {
             if (!stockSymbol) {
                 throw new Error('Must provide a stockSymbol.');
@@ -27,7 +31,11 @@
 (function ($) {
     'use strict';
 
-    window.uiProvider = {
+    if (!window.stockRetriever) {
+        window.stockRetriever = {};
+    }
+
+    window.stockRetriever.uiProvider = {
         configuration: {
             selectors: {
                 stockSymbol: $('#stock-symbol'),
@@ -56,7 +64,11 @@
 (function ($, uiProvider, dataProvider) {
     'use strict';
 
-    window.stockRetriever = {
+    if (!window.stockRetriever) {
+        window.stockRetriever = {};
+    }
+
+    window.stockRetriever.app = {
         configuration: {
             selectors: {
                 fetchButton: $('#fetch')
@@ -64,7 +76,7 @@
         },
         init: function () {
             var selectors = this.configuration.selectors;
-            selectors.fetchButton.on('click', stockRetriever.fetch);
+            selectors.fetchButton.on('click', this.fetch);
         },
         fetch: function () {
             var stockSymbol = uiProvider.getStockSymbol();
@@ -78,10 +90,10 @@
             });
         }
     };
-})(jQuery, uiProvider, dataProvider);
+})(jQuery, stockRetriever.uiProvider, stockRetriever.dataProvider);
 
-(function (stockRetriever) {
+(function (app) {
     'use strict';
 
-    stockRetriever.init();
-})(stockRetriever);
+    app.init();
+})(stockRetriever.app);
