@@ -1,9 +1,11 @@
-(function ($) {
+(function () {
     'use strict';
 
-    if (!window.stockRetriever) {
-        window.stockRetriever = {};
-    }
+    window.stockRetriever = window.stockRetriever || {};
+})();
+
+(function ($) {
+    'use strict';
 
     window.stockRetriever.dataProvider = {
         getStockPrice: function (stockSymbol) {
@@ -30,10 +32,6 @@
 
 (function ($) {
     'use strict';
-
-    if (!window.stockRetriever) {
-        window.stockRetriever = {};
-    }
 
     window.stockRetriever.uiProvider = {
         configuration: {
@@ -69,10 +67,6 @@
 
 (function ($, uiProvider, dataProvider) {
     'use strict';
-
-    if (!window.stockRetriever) {
-        window.stockRetriever = {};
-    }
 
     window.stockRetriever.app = {
         configuration: {
