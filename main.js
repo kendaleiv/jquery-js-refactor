@@ -46,10 +46,14 @@
         displayLoading: function () {
             var selectors = this.configuration.selectors;
             selectors.currentStockPrice.html('Loading ...');
+
+            return this;
         },
         getStockSymbol: function () {
             var selectors = this.configuration.selectors;
             return $.trim(selectors.stockSymbol.val().toUpperCase());
+
+            return this;
         },
         setStockPrice: function (stockSymbol, price) {
             var dateString = new Date().toString();
@@ -57,6 +61,8 @@
             var selectors = this.configuration.selectors;
             selectors.currentStockPrice.html('<strong>' + stockSymbol + '</strong>: $' + price + ' retrieved at ' + dateString);
             selectors.stockPriceLog.append('<li><strong>' + stockSymbol + '</strong> $' + price + ' retrieved at ' + dateString + '</li>');
+
+            return this;
         }
     };
 })(jQuery);
@@ -77,6 +83,8 @@
         init: function () {
             var selectors = this.configuration.selectors;
             selectors.fetchButton.on('click', this.fetch);
+
+            return this;
         },
         fetch: function () {
             var stockSymbol = uiProvider.getStockSymbol();
@@ -88,6 +96,8 @@
             }).fail(function (jqXHR) {
                 uiProvider.setStockPrice(stockSymbol, '(n/a)');
             });
+
+            return this;
         }
     };
 })(jQuery, stockRetriever.uiProvider, stockRetriever.dataProvider);
