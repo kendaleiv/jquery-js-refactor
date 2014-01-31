@@ -7,8 +7,8 @@
 
     window.stockRetriever.dataProvider = {
         getStockPrice: function (stockSymbol) {
-            if (!stockSymbol) {
-                throw new Error('Must provide a stockSymbol.');
+            if (!stockSymbol || typeof stockSymbol !== 'string') {
+                throw new TypeError('Must provide a string for stockSymbol.');
             }
 
             var promise = $.Deferred(function (deferred) {

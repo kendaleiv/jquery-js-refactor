@@ -19,8 +19,12 @@ describe('stockRetriever', function () {
                 });
         });
 
-        it('should throw Error for missing stockSymbol', function () {
+        it('should throw error for missing stockSymbol', function () {
             expect(function () { dataProvider.getStockPrice() }).toThrow();
+        });
+
+        it('should throw error for non-string stockSymbol', function () {
+            expect(function () { dataProvider.getStockPrice(1) }).toThrow();
         });
     });
 
