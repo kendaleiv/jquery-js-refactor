@@ -12,7 +12,7 @@
             }
 
             var promise = $.Deferred(function (deferred) {
-                var url = 'http://query.yahooapis.com/v1/public/yql?q=select * from yahoo.finance.quotes where symbol in ("' + stockSymbol + '")&diagnostics=true&env=http://datatables.org/alltables.env';
+                var url = 'http://query.yahooapis.com/v1/public/yql?q=select * from yahoo.finance.quotes where symbol in ("' +  encodeURIComponent(stockSymbol) + '")&diagnostics=true&env=http://datatables.org/alltables.env';
                 $.ajax(url).done(function (res) {
                     var quote = $(res).find('[symbol="' + stockSymbol + '"]');
                     var lastTradePrice = quote.find('LastTradePriceOnly').text();
