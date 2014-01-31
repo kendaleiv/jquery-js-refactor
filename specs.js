@@ -69,10 +69,10 @@ describe('stockRetriever', function () {
             });
 
             it('should append stock price to log', function () {
-                spyOn(selectors.stockPriceLog, 'html');
+                spyOn(selectors.stockPriceLog, 'append');
 
                 uiProvider.setStockPrice('GOOG', 1000.00);
-                expect(selectors.stockPriceLog.html).toHaveBeenCalled();
+                expect(selectors.stockPriceLog.append).toHaveBeenCalled();
             });
         });
     });

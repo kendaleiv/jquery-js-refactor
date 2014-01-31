@@ -56,7 +56,7 @@
 
             var selectors = this.configuration.selectors;
             selectors.currentStockPrice.html('<strong>' + stockSymbol + '</strong>: $' + price + ' retrieved at ' + dateString);
-            selectors.stockPriceLog.html(selectors.stockPriceLog.html() + '<li><strong>' + stockSymbol + '</strong> $' + price + ' retrieved at ' + dateString + '</li>');
+            selectors.stockPriceLog.append('<li><strong>' + stockSymbol + '</strong> $' + price + ' retrieved at ' + dateString + '</li>');
         }
     };
 })(jQuery);
