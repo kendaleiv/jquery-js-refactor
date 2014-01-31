@@ -172,10 +172,6 @@ $.ajax(url).done(function (res) {
 (function ($) {
     'use strict';
 
-    if (!window.stockRetriever) {
-        window.stockRetriever = {};
-    }
-
     window.stockRetriever.dataProvider = {
         getStockPrice: function (stockSymbol) {
             // Return promise, allowing clients to use:
