@@ -54,8 +54,6 @@
         getStockSymbol: function () {
             var selectors = this.configuration.selectors;
             return $.trim(selectors.stockSymbol.val()).toUpperCase();
-
-            return this;
         },
         setStockPrice: function (stockSymbol, price) {
             var dateString = new Date().toString();
