@@ -53,7 +53,7 @@
         },
         getStockSymbol: function () {
             var selectors = this.configuration.selectors;
-            return $.trim(selectors.stockSymbol.val().toUpperCase());
+            return $.trim(selectors.stockSymbol.val()).toUpperCase();
 
             return this;
         },
