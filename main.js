@@ -1,13 +1,13 @@
-(function () {
+(function (global) {
     'use strict';
 
-    window.stockRetriever = window.stockRetriever || {};
-})();
+    global.stockRetriever = global.stockRetriever || {};
+})(this);
 
-(function ($) {
+(function (global, $) {
     'use strict';
 
-    window.stockRetriever.dataProvider = {
+    global.stockRetriever.dataProvider = {
         getStockPrice: function (stockSymbol) {
             if (!stockSymbol || typeof stockSymbol !== 'string') {
                 throw new TypeError('Must provide a string for stockSymbol.');
@@ -28,12 +28,12 @@
             return promise;
         }
     };
-})(jQuery);
+})(this, jQuery);
 
-(function ($) {
+(function (global, $) {
     'use strict';
 
-    window.stockRetriever.uiProvider = {
+    global.stockRetriever.uiProvider = {
         configuration: {
             selectors: {
                 stockSymbol: $('#stock-symbol'),
@@ -63,12 +63,12 @@
             return this;
         }
     };
-})(jQuery);
+})(this, jQuery);
 
-(function ($, uiProvider, dataProvider) {
+(function (global, $, uiProvider, dataProvider) {
     'use strict';
 
-    window.stockRetriever.app = {
+    global.stockRetriever.app = {
         configuration: {
             selectors: {
                 fetchButton: $('#fetch')
@@ -94,10 +94,10 @@
             return this;
         }
     };
-})(jQuery, stockRetriever.uiProvider, stockRetriever.dataProvider);
+})(this, jQuery, stockRetriever.uiProvider, stockRetriever.dataProvider);
 
-(function (app) {
+(function (global, app) {
     'use strict';
 
     app.init();
-})(stockRetriever.app);
+})(this, stockRetriever.app);
