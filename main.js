@@ -9,7 +9,7 @@
 
     global.stockRetriever.dataProvider = {
         getStockPrice: function (stockSymbol) {
-            if (!stockSymbol || typeof stockSymbol !== 'string') {
+            if (typeof stockSymbol !== 'string') {
                 throw new TypeError('Must provide a string for stockSymbol.');
             }
 
