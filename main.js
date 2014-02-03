@@ -94,10 +94,10 @@
             return this;
         }
     };
-})(this, jQuery, stockRetriever.uiProvider, stockRetriever.dataProvider);
+})(this, jQuery, this.stockRetriever.uiProvider, this.stockRetriever.dataProvider);
 
 (function (global, app) {
     'use strict';
 
     app.init();
-})(this, stockRetriever.app);
+})(this, this.stockRetriever.app);
