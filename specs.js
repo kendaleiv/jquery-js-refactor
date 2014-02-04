@@ -30,7 +30,7 @@ describe('stockRetriever', function () {
 
     describe('uiProvider', function () {
         var uiProvider = stockRetriever.uiProvider;
-        var selectors = uiProvider.configuration.selectors;
+        var selectors = uiProvider.getConfiguration().selectors;
 
         describe('displayLoading', function () {
             it('should display loading for current stock price', function () {
@@ -86,7 +86,7 @@ describe('stockRetriever', function () {
 
         describe('init', function () {
             it('should create click handler on fetchButton selector', function () {
-                var selectors = app.configuration.selectors;
+                var selectors = app.getConfiguration().selectors;
                 spyOn(selectors.fetchButton, 'on');
 
                 app.init();
