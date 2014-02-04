@@ -7,8 +7,8 @@
 (function (global, $) {
     'use strict';
 
-    global.stockRetriever.dataProvider = {
-        getStockPrice: function (stockSymbol) {
+    global.stockRetriever.dataProvider = (function() {
+        var getStockPrice = function (stockSymbol) {
             if (typeof stockSymbol !== 'string') {
                 throw new TypeError('Must provide a string for stockSymbol.');
             }
@@ -30,59 +30,77 @@
             }).promise();
 
             return promise;
+        };
+
+        return {
+            getStockPrice: getStockPrice
         }
-    };
+    })();
 })(this, jQuery);
 
 (function (global, $) {
     'use strict';
 
-    global.stockRetriever.uiProvider = {
-        configuration: {
+    global.stockRetriever.uiProvider = (function() {
+        var configuration = {
             selectors: {
                 stockSymbol: $('#stock-symbol'),
                 currentStockPrice: $('#current-stock-price'),
                 stockPriceLog: $('#stock-price-log')
             }
-        },
-        displayLoading: function () {
-            var selectors = this.configuration.selectors;
+        };
+
+        var displayLoading = function () {
+            var selectors = configuration.selectors;
             selectors.currentStockPrice.html('Loading ...');
 
             return this;
-        },
-        getStockSymbol: function () {
-            var selectors = this.configuration.selectors;
+        };
+
+        var getStockSymbol = function () {
+            var selectors = configuration.selectors;
             return $.trim(selectors.stockSymbol.val()).toUpperCase();
-        },
-        setStockPrice: function (stockSymbol, price) {
+        };
+
+        var setStockPrice = function (stockSymbol, price) {
             var dateString = new Date().toString();
 
-            var selectors = this.configuration.selectors;
+            var selectors = configuration.selectors;
             selectors.currentStockPrice.html('<strong>' + stockSymbol + '</strong>: $' + price + ' retrieved at ' + dateString);
             selectors.stockPriceLog.append('<li><strong>' + stockSymbol + '</strong> $' + price + ' retrieved at ' + dateString + '</li>');
 
             return this;
+        };
+
+        return {
+            displayLoading: displayLoading,
+            getStockSymbol: getStockSymbol,
+            setStockPrice: setStockPrice,
+            getConfiguration: function() {
+                return $.extend({}, configuration);
+            }
         }
-    };
+    })();
 })(this, jQuery);
 
 (function (global, $, uiProvider, dataProvider) {
     'use strict';
 
-    global.stockRetriever.app = {
-        configuration: {
+    global.stockRetriever.app = (function() {
+        var configuration = {
             selectors: {
                 fetchButton: $('#fetch')
             }
-        },
-        init: function () {
-            var selectors = this.configuration.selectors;
+        };
+
+        var init = function () {
+            var selectors = configuration.selectors;
             selectors.fetchButton.on('click', this.fetch);
 
             return this;
-        },
-        fetch: function () {
+        };
+
+        var fetch = function () {
             var stockSymbol = uiProvider.getStockSymbol();
 
             uiProvider.displayLoading();
@@ -94,8 +112,16 @@
             });
 
             return this;
+        };
+
+        return {
+            init: init,
+            fetch: fetch,
+            getConfiguration: function() {
+                return $.extend({}, configuration);
+            }
         }
-    };
+    })();
 })(this, jQuery, this.stockRetriever.uiProvider, this.stockRetriever.dataProvider);
 
 (function (global, app) {
