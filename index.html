@@ -65,6 +65,18 @@ $(document).ready(function () {
 });
                     </code></pre>
                     <a href="https://github.com/kendaleiv/jquery-js-refactor/blob/c261e39b3291fc7a88c6accd0182a381917e776b/index.html">View on GitHub</a>
+                    <aside class="notes">
+                        Issues include:
+                        <ul>
+                            <li>
+                                Mixing concerns between UI, AJAX, and overall application flow.
+                                Could result in an unmaintainable mess as more features are implemented.
+                                Writing tests against this code may be possible, but could be difficult.
+                            </li>
+                            <li>Non-cached jQuery selectors</li>
+                            <li>Opportunities for shorthand usage and/or better jQuery syntax.</li>
+                        </ul>
+                    </aside>
                 </section>
 
                 <section>
@@ -86,6 +98,14 @@ $(document).ready(function () {
                     <h2>Move JS to external file(s)</h2>
                     <br />
                     <p>Because, reasons.</p>
+                    <br />
+                    <br />
+                    <small>
+                        <ul>
+                            <li>Separation of concerns</li>
+                            <li>Cacheability</li>
+                        </ul>
+                    </small>
                 </section>
 
                 <section>
@@ -128,7 +148,7 @@ function () {
                     <pre><code data-trim contenteditable>
 $(document).ready(function () { /* Code here */ });
 
-$(function() { /* Code here */ });
+$(function () { /* Code here */ });
                     </code></pre>
                 </section>
 
