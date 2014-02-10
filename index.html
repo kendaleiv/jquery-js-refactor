@@ -169,19 +169,20 @@ $.ajax(url).done(function (res) {
 });
                     </code></pre>
                     <pre><code data-trim contenteditable>
-(function ($) {
+(function (global, $) {
     'use strict';
+    global.stockRetriever = global.stockRetriever || {};
 
-    window.stockRetriever.dataProvider = {
-        getStockPrice: function (stockSymbol) {
+    global.stockRetriever.dataProvider = {
+        getStockPrice: function (symbol) {
             // Return promise, allowing clients to use:
             //
-            // window.stockRetriver.dataProvider
-            //     .getStockPrice('MSFT')
-            //     .done(function (price) { /* Code here */ });
+            // global.stockRetriver.dataProvider
+            //     .getPrice('MSFT')
+            //     .done(function (res) { /* Code here */ });
         }
     };
-})(jQuery);
+})(this, jQuery);
                     </code></pre>
                 </section>
 
@@ -234,11 +235,13 @@ describe('specs test', function () {
                 <section>
                     <h2>Async tests</h2>
                     <pre><code data-trim contenteditable>
-it('should return stock price', function (specDone) {
+it('should return single price', function (specDone) {
     dataProvider
-        .getStockPrice('MSFT')
-        .done(function (price) {
-            expect(price).toMatch(/\d.+/);
+        .getPrices('MSFT')
+        .done(function (res) {
+            var item = res[0];
+            expect(item.symbol).toMatch('MSFT');
+            expect(item.lastTradePrice).toMatch(/\d.+/);
             specDone();
         });
 });
@@ -267,37 +270,40 @@ describe('init', function () {
 describe('fetch', function () {
     var dataProvider = stockRetriever.dataProvider;
     var uiProvider = stockRetriever.uiProvider;
+    var now = new Date();
 
     beforeEach(function () {
-        spyOn(dataProvider, 'getStockPrice').and.callFake(function () {
-            var promise = $.Deferred(function (deferred) {
-                deferred.resolve(1000.00);
+        spyOn(dataProvider, 'getPrices').and.callFake(function () {
+            return $.Deferred(function (deferred) {
+                deferred.resolve([{
+                    symbol: 'GOOG',
+                    lastTradePrice: 1000.00,
+                    retrieved: now
+                }]);
             }).promise();
-
-            return promise;
         });
 
         spyOn(uiProvider, 'displayLoading');
-        spyOn(uiProvider, 'getStockSymbol').and.returnValue('GOOG');
-        spyOn(uiProvider, 'setStockPrice');
+        spyOn(uiProvider, 'getSymbol').and.returnValue('GOOG');
+        spyOn(uiProvider, 'setPrice');
 
         app.fetch();
     });
 
-    it('should get stock symbol', function () {
-        expect(uiProvider.getStockSymbol).toHaveBeenCalled();
+    it('should get symbol', function () {
+        expect(uiProvider.getSymbol).toHaveBeenCalled();
     });
 
     it('should display loading', function () {
         expect(uiProvider.displayLoading).toHaveBeenCalled();
     });
 
-    it('should get stock price', function () {
-        expect(dataProvider.getStockPrice).toHaveBeenCalledWith('GOOG');
+    it('should get price', function () {
+        expect(dataProvider.getPrices).toHaveBeenCalledWith('GOOG');
     });
 
-    it('should update stock price information', function () {
-        expect(uiProvider.setStockPrice).toHaveBeenCalledWith('GOOG', 1000.00);
+    it('should update price information', function () {
+        expect(uiProvider.setPrice).toHaveBeenCalledWith('GOOG', 1000.00, now);
     });
 });
                     </code></pre>
