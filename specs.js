@@ -10,21 +10,39 @@ describe('stockRetriever', function () {
     describe('dataProvider', function () {
         var dataProvider = stockRetriever.dataProvider;
 
-        it('should return stock price', function (specDone) {
+        it('should return single stock price', function (specDone) {
             dataProvider
-                .getStockPrice('MSFT')
-                .done(function (price) {
-                    expect(price).toMatch(/\d.+/);
+                .getStockPrices('MSFT')
+                .done(function (res) {
+                    var item = res[0];
+                    expect(item.stockSymbol).toMatch('MSFT');
+                    expect(item.lastTradePrice).toMatch(/\d.+/);
                     specDone();
                 });
         });
 
-        it('should throw error for missing stockSymbol', function () {
-            expect(function () { dataProvider.getStockPrice() }).toThrow();
+        it('should return multiple stock prices', function (specDone) {
+            dataProvider
+                .getStockPrices(['MSFT', 'GOOG'])
+                .done(function (res) {
+                    var msft = res[0];
+                    expect(msft.stockSymbol).toMatch('MSFT');
+                    expect(msft.lastTradePrice).toMatch(/\d.+/);
+
+                    var goog = res[1];
+                    expect(goog.stockSymbol).toMatch('GOOG');
+                    expect(goog.lastTradePrice).toMatch(/\d.+/);
+
+                    specDone();
+                });
         });
 
-        it('should throw error for non-string stockSymbol', function () {
-            expect(function () { dataProvider.getStockPrice(1) }).toThrow();
+        it('should throw error for missing stockSymbols', function () {
+            expect(function () { dataProvider.getStockPrices() }).toThrow();
+        });
+
+        it('should throw error for unexpected stockSymbols value', function () {
+            expect(function () { dataProvider.getStockPrices(1) }).toThrow();
         });
     });
 
@@ -68,14 +86,14 @@ describe('stockRetriever', function () {
             it('should update current stock price', function () {
                 spyOn(selectors.currentStockPrice, 'html');
 
-                uiProvider.setStockPrice('GOOG', 1000.00);
+                uiProvider.setStockPrice('GOOG', 1000.00, new Date());
                 expect(selectors.currentStockPrice.html).toHaveBeenCalled();
             });
 
             it('should append stock price to log', function () {
                 spyOn(selectors.stockPriceLog, 'append');
 
-                uiProvider.setStockPrice('GOOG', 1000.00);
+                uiProvider.setStockPrice('GOOG', 1000.00, new Date());
                 expect(selectors.stockPriceLog.append).toHaveBeenCalled();
             });
         });
@@ -97,14 +115,17 @@ describe('stockRetriever', function () {
         describe('fetch', function () {
             var dataProvider = stockRetriever.dataProvider;
             var uiProvider = stockRetriever.uiProvider;
+            var now = new Date();
 
             beforeEach(function () {
-                spyOn(dataProvider, 'getStockPrice').and.callFake(function () {
-                    var promise = $.Deferred(function (deferred) {
-                        deferred.resolve(1000.00);
+                spyOn(dataProvider, 'getStockPrices').and.callFake(function () {
+                    return $.Deferred(function (deferred) {
+                        deferred.resolve([{
+                            stockSymbol: 'GOOG',
+                            lastTradePrice: 1000.00,
+                            retrieved: now
+                        }]);
                     }).promise();
-
-                    return promise;
                 });
 
                 spyOn(uiProvider, 'displayLoading');
@@ -123,11 +144,11 @@ describe('stockRetriever', function () {
             });
 
             it('should get stock price', function () {
-                expect(dataProvider.getStockPrice).toHaveBeenCalledWith('GOOG');
+                expect(dataProvider.getStockPrices).toHaveBeenCalledWith('GOOG');
             });
 
             it('should update stock price information', function () {
-                expect(uiProvider.setStockPrice).toHaveBeenCalledWith('GOOG', 1000.00);
+                expect(uiProvider.setStockPrice).toHaveBeenCalledWith('GOOG', 1000.00, now);
             });
         });
     });

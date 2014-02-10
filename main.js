@@ -8,28 +8,51 @@
     'use strict';
 
     global.stockRetriever.dataProvider = {
-        getStockPrice: function (stockSymbol) {
-            if (typeof stockSymbol !== 'string') {
-                throw new TypeError('Must provide a string for stockSymbol.');
+        getStockPrices: function (stockSymbols) {
+            if (typeof stockSymbols !== 'string' && !$.isArray(stockSymbols)) {
+                throw new TypeError('Must provide a string or an array for stockSymbols.');
+            }
+            
+            if (typeof stockSymbols === 'string') {
+                stockSymbols = [stockSymbols];
             }
 
-            var promise = $.Deferred(function (deferred) {
-                var url = 'http://query.yahooapis.com/v1/public/yql' +
-                    '?q=select * from yahoo.finance.quotes where symbol in ("' +
-                    encodeURIComponent(stockSymbol) +
-                    '")&diagnostics=true&env=http://datatables.org/alltables.env';
-                    
-                $.ajax(url).done(function (res) {
-                    var quote = $(res).find('[symbol="' + stockSymbol + '"]');
-                    var lastTradePrice = quote.find('LastTradePriceOnly').text();
-    
-                    deferred.resolve(lastTradePrice);
-                }).fail(deferred.reject);
-            }).promise();
+            return $.Deferred(function (deferred) {
+                var url = getUrl(stockSymbols);
 
-            return promise;
+                $.get(url)
+                    .done(function (res) {
+                        var result = parseResponse(res);
+                        deferred.resolve(result);
+                    })
+                    .fail(deferred.reject);
+            }).promise();
         }
     };
+
+    function getUrl(stockSymbols) {
+        var url = 'http://query.yahooapis.com/v1/public/yql' +
+            '?q=select * from yahoo.finance.quotes where symbol in ("' +
+            stockSymbols.map(encodeURIComponent).join() +
+            '")&diagnostics=true&env=http://datatables.org/alltables.env';
+
+        return url;
+    }
+
+    function parseResponse(xml) {
+        var $query = $(xml).find('query').first();
+        var created = new Date($query.attr('yahoo:created'));
+        var quotes = $query.find('quote').get();
+        
+        return quotes.map(function (quote) {
+            var $quote = $(quote);
+            return {
+                stockSymbol: $quote.attr('symbol'),
+                lastTradePrice: parseFloat($quote.find('LastTradePriceOnly').text()),
+                retrieved: created
+            };
+        });
+    }
 })(this, jQuery);
 
 (function (global, $) {
@@ -53,12 +76,12 @@
             var selectors = this.configuration.selectors;
             return $.trim(selectors.stockSymbol.val()).toUpperCase();
         },
-        setStockPrice: function (stockSymbol, price) {
-            var dateString = new Date().toString();
-
+        setStockPrice: function (stockSymbol, price, retrievedAt) {
             var selectors = this.configuration.selectors;
-            selectors.currentStockPrice.html('<strong>' + stockSymbol + '</strong>: $' + price + ' retrieved at ' + dateString);
-            selectors.stockPriceLog.append('<li><strong>' + stockSymbol + '</strong> $' + price + ' retrieved at ' + dateString + '</li>');
+            var retrievedAtStr = retrievedAt.toString();
+
+            selectors.currentStockPrice.html('<strong>' + stockSymbol + '</strong>: $' + price + ' retrieved at ' + retrievedAtStr);
+            selectors.stockPriceLog.append('<li><strong>' + stockSymbol + '</strong> $' + price + ' retrieved at ' + retrievedAtStr + '</li>');
 
             return this;
         }
@@ -85,8 +108,9 @@
 
             uiProvider.displayLoading();
 
-            dataProvider.getStockPrice(stockSymbol).then(function (lastTradePrice) {
-                uiProvider.setStockPrice(stockSymbol, lastTradePrice);
+            dataProvider.getStockPrices(stockSymbol).then(function (res) {
+                var item = res[0];
+                uiProvider.setStockPrice(item.stockSymbol, item.lastTradePrice, item.retrieved);
             }).fail(function (jqXHR) {
                 uiProvider.setStockPrice(stockSymbol, '(n/a)');
             });
