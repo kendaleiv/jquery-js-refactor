@@ -12,15 +12,15 @@
                 symbols = [symbols];
             }
 
-            return $.Deferred(function (deferred) {
+            return $.Deferred(function (dfd) {
                 var url = getUrl(symbols);
 
                 $.get(url)
                     .done(function (res) {
                         var result = parseResponse(res);
-                        deferred.resolve(result);
+                        dfd.resolve(result);
                     })
-                    .fail(deferred.reject);
+                    .fail(dfd.reject);
             }).promise();
         }
     };

@@ -128,8 +128,8 @@ describe('stockRetriever', function () {
 
             beforeEach(function () {
                 spyOn(dataProvider, 'getPrices').and.callFake(function () {
-                    return $.Deferred(function (deferred) {
-                        deferred.resolve([{
+                    return $.Deferred(function (dfd) {
+                        dfd.resolve([{
                             symbol: 'GOOG',
                             lastTradePrice: 1000.00,
                             retrieved: now
