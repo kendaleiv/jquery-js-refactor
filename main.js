@@ -1,11 +1,6 @@
-(function (global) {
-    'use strict';
-
-    global.stockRetriever = global.stockRetriever || {};
-})(this);
-
 (function (global, $) {
     'use strict';
+    global.stockRetriever = global.stockRetriever || {};
 
     global.stockRetriever.dataProvider = {
         getPrices: function (symbols) {
@@ -55,6 +50,7 @@
 
 (function (global, $) {
     'use strict';
+    global.stockRetriever = global.stockRetriever || {};
 
     global.stockRetriever.uiProvider = {
         configuration: {
@@ -93,6 +89,7 @@
 
 (function (global, $, uiProvider, dataProvider) {
     'use strict';
+    global.stockRetriever = global.stockRetriever || {};
 
     global.stockRetriever.app = {
         configuration: {
