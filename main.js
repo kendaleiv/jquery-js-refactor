@@ -8,17 +8,17 @@
     'use strict';
 
     global.stockRetriever.dataProvider = {
-        getStockPrices: function (stockSymbols) {
-            if (typeof stockSymbols !== 'string' && !$.isArray(stockSymbols)) {
-                throw new TypeError('Must provide a string or an array for stockSymbols.');
+        getPrices: function (symbols) {
+            if (typeof symbols !== 'string' && !$.isArray(symbols)) {
+                throw new TypeError('Must provide a string or an array for symbols.');
             }
             
-            if (typeof stockSymbols === 'string') {
-                stockSymbols = [stockSymbols];
+            if (typeof symbols === 'string') {
+                symbols = [symbols];
             }
 
             return $.Deferred(function (deferred) {
-                var url = getUrl(stockSymbols);
+                var url = getUrl(symbols);
 
                 $.get(url)
                     .done(function (res) {
@@ -30,13 +30,11 @@
         }
     };
 
-    function getUrl(stockSymbols) {
-        var url = 'http://query.yahooapis.com/v1/public/yql' +
+    function getUrl(symbols) {
+        return 'http://query.yahooapis.com/v1/public/yql' +
             '?q=select * from yahoo.finance.quotes where symbol in ("' +
-            stockSymbols.map(encodeURIComponent).join() +
+            symbols.map(encodeURIComponent).join() +
             '")&diagnostics=true&env=http://datatables.org/alltables.env';
-
-        return url;
     }
 
     function parseResponse(xml) {
@@ -47,7 +45,7 @@
         return quotes.map(function (quote) {
             var $quote = $(quote);
             return {
-                stockSymbol: $quote.attr('symbol'),
+                symbol: $quote.attr('symbol'),
                 lastTradePrice: parseFloat($quote.find('LastTradePriceOnly').text()),
                 retrieved: created
             };
@@ -61,27 +59,27 @@
     global.stockRetriever.uiProvider = {
         configuration: {
             selectors: {
-                stockSymbol: $('#stock-symbol'),
-                currentStockPrice: $('#current-stock-price'),
-                stockPriceLog: $('#stock-price-log')
+                symbol: $('#stock-symbol'),
+                currentPrice: $('#current-stock-price'),
+                priceLog: $('#stock-price-log')
             }
         },
         displayLoading: function () {
             var selectors = this.configuration.selectors;
-            selectors.currentStockPrice.html('Loading ...');
+            selectors.currentPrice.html('Loading ...');
 
             return this;
         },
-        getStockSymbol: function () {
+        getSymbol: function () {
             var selectors = this.configuration.selectors;
-            return $.trim(selectors.stockSymbol.val()).toUpperCase();
+            return $.trim(selectors.symbol.val()).toUpperCase();
         },
-        setStockPrice: function (stockSymbol, price, retrievedAt) {
+        setPrice: function (symbol, price, retrievedAt) {
             var selectors = this.configuration.selectors;
             var retrievedAtStr = retrievedAt.toString();
 
-            selectors.currentStockPrice.html('<strong>' + stockSymbol + '</strong>: $' + price + ' retrieved at ' + retrievedAtStr);
-            selectors.stockPriceLog.append('<li><strong>' + stockSymbol + '</strong> $' + price + ' retrieved at ' + retrievedAtStr + '</li>');
+            selectors.currentPrice.html('<strong>' + symbol + '</strong>: $' + price + ' retrieved at ' + retrievedAtStr);
+            selectors.priceLog.append('<li><strong>' + symbol + '</strong> $' + price + ' retrieved at ' + retrievedAtStr + '</li>');
 
             return this;
         }
@@ -104,15 +102,15 @@
             return this;
         },
         fetch: function () {
-            var stockSymbol = uiProvider.getStockSymbol();
+            var symbol = uiProvider.getSymbol();
 
             uiProvider.displayLoading();
 
-            dataProvider.getStockPrices(stockSymbol).then(function (res) {
+            dataProvider.getPrices(symbol).then(function (res) {
                 var item = res[0];
-                uiProvider.setStockPrice(item.stockSymbol, item.lastTradePrice, item.retrieved);
-            }).fail(function (jqXHR) {
-                uiProvider.setStockPrice(stockSymbol, '(n/a)');
+                uiProvider.setPrice(item.symbol, item.lastTradePrice, item.retrieved);
+            }).fail(function () {
+                uiProvider.setPrice(item.symbol, '(n/a)');
             });
 
             return this;

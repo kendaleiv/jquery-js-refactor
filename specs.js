@@ -10,39 +10,39 @@ describe('stockRetriever', function () {
     describe('dataProvider', function () {
         var dataProvider = stockRetriever.dataProvider;
 
-        it('should return single stock price', function (specDone) {
+        it('should return single price', function (specDone) {
             dataProvider
-                .getStockPrices('MSFT')
+                .getPrices('MSFT')
                 .done(function (res) {
                     var item = res[0];
-                    expect(item.stockSymbol).toMatch('MSFT');
+                    expect(item.symbol).toMatch('MSFT');
                     expect(item.lastTradePrice).toMatch(/\d.+/);
                     specDone();
                 });
         });
 
-        it('should return multiple stock prices', function (specDone) {
+        it('should return multiple prices', function (specDone) {
             dataProvider
-                .getStockPrices(['MSFT', 'GOOG'])
+                .getPrices(['MSFT', 'GOOG'])
                 .done(function (res) {
                     var msft = res[0];
-                    expect(msft.stockSymbol).toMatch('MSFT');
+                    expect(msft.symbol).toMatch('MSFT');
                     expect(msft.lastTradePrice).toMatch(/\d.+/);
 
                     var goog = res[1];
-                    expect(goog.stockSymbol).toMatch('GOOG');
+                    expect(goog.symbol).toMatch('GOOG');
                     expect(goog.lastTradePrice).toMatch(/\d.+/);
 
                     specDone();
                 });
         });
 
-        it('should throw error for missing stockSymbols', function () {
-            expect(function () { dataProvider.getStockPrices() }).toThrow();
+        it('should throw error for missing symbols', function () {
+            expect(function () { dataProvider.getPrices() }).toThrow();
         });
 
-        it('should throw error for unexpected stockSymbols value', function () {
-            expect(function () { dataProvider.getStockPrices(1) }).toThrow();
+        it('should throw error for unexpected symbols value', function () {
+            expect(function () { dataProvider.getPrices(1) }).toThrow();
         });
     });
 
@@ -51,50 +51,50 @@ describe('stockRetriever', function () {
         var selectors = uiProvider.configuration.selectors;
 
         describe('displayLoading', function () {
-            it('should display loading for current stock price', function () {
-                spyOn(selectors.currentStockPrice, 'html');
+            it('should display loading for current price', function () {
+                spyOn(selectors.currentPrice, 'html');
 
                 uiProvider.displayLoading();
-                expect(selectors.currentStockPrice.html).toHaveBeenCalledWith('Loading ...');
+                expect(selectors.currentPrice.html).toHaveBeenCalledWith('Loading ...');
             });
         });
 
-        describe('getStockSymbol', function () {
-            it('should get stock symbol from DOM', function () {
-                spyOn(selectors.stockSymbol, 'val').and.returnValue('GOOG');
+        describe('getSymbol', function () {
+            it('should get symbol from DOM', function () {
+                spyOn(selectors.symbol, 'val').and.returnValue('GOOG');
 
-                var stockSymbol = uiProvider.getStockSymbol();
-                expect(stockSymbol).toBe('GOOG');
+                var symbol = uiProvider.getSymbol();
+                expect(symbol).toBe('GOOG');
             });
 
-            it('should toUpperCase stock symbol', function () {
-                spyOn(selectors.stockSymbol, 'val').and.returnValue('goog');
+            it('should toUpperCase symbol', function () {
+                spyOn(selectors.symbol, 'val').and.returnValue('goog');
 
-                var stockSymbol = uiProvider.getStockSymbol();
-                expect(stockSymbol).toBe('GOOG');
+                var symbol = uiProvider.getSymbol();
+                expect(symbol).toBe('GOOG');
             });
 
-            it('should trim stock symbol', function () {
-                spyOn(selectors.stockSymbol, 'val').and.returnValue(' GOOG ');
+            it('should trim symbol', function () {
+                spyOn(selectors.symbol, 'val').and.returnValue(' GOOG ');
 
-                var stockSymbol = uiProvider.getStockSymbol();
-                expect(stockSymbol).toBe('GOOG');
+                var symbol = uiProvider.getSymbol();
+                expect(symbol).toBe('GOOG');
             });
         });
 
-        describe('setStockPrice', function () {
-            it('should update current stock price', function () {
-                spyOn(selectors.currentStockPrice, 'html');
+        describe('setPrice', function () {
+            it('should update current price', function () {
+                spyOn(selectors.currentPrice, 'html');
 
-                uiProvider.setStockPrice('GOOG', 1000.00, new Date());
-                expect(selectors.currentStockPrice.html).toHaveBeenCalled();
+                uiProvider.setPrice('GOOG', 1000.00, new Date());
+                expect(selectors.currentPrice.html).toHaveBeenCalled();
             });
 
-            it('should append stock price to log', function () {
-                spyOn(selectors.stockPriceLog, 'append');
+            it('should append price to log', function () {
+                spyOn(selectors.priceLog, 'append');
 
-                uiProvider.setStockPrice('GOOG', 1000.00, new Date());
-                expect(selectors.stockPriceLog.append).toHaveBeenCalled();
+                uiProvider.setPrice('GOOG', 1000.00, new Date());
+                expect(selectors.priceLog.append).toHaveBeenCalled();
             });
         });
     });
@@ -118,10 +118,10 @@ describe('stockRetriever', function () {
             var now = new Date();
 
             beforeEach(function () {
-                spyOn(dataProvider, 'getStockPrices').and.callFake(function () {
+                spyOn(dataProvider, 'getPrices').and.callFake(function () {
                     return $.Deferred(function (deferred) {
                         deferred.resolve([{
-                            stockSymbol: 'GOOG',
+                            symbol: 'GOOG',
                             lastTradePrice: 1000.00,
                             retrieved: now
                         }]);
@@ -129,26 +129,26 @@ describe('stockRetriever', function () {
                 });
 
                 spyOn(uiProvider, 'displayLoading');
-                spyOn(uiProvider, 'getStockSymbol').and.returnValue('GOOG');
-                spyOn(uiProvider, 'setStockPrice');
+                spyOn(uiProvider, 'getSymbol').and.returnValue('GOOG');
+                spyOn(uiProvider, 'setPrice');
 
                 app.fetch();
             });
 
-            it('should get stock symbol', function () {
-                expect(uiProvider.getStockSymbol).toHaveBeenCalled();
+            it('should get symbol', function () {
+                expect(uiProvider.getSymbol).toHaveBeenCalled();
             });
 
             it('should display loading', function () {
                 expect(uiProvider.displayLoading).toHaveBeenCalled();
             });
 
-            it('should get stock price', function () {
-                expect(dataProvider.getStockPrices).toHaveBeenCalledWith('GOOG');
+            it('should get price', function () {
+                expect(dataProvider.getPrices).toHaveBeenCalledWith('GOOG');
             });
 
-            it('should update stock price information', function () {
-                expect(uiProvider.setStockPrice).toHaveBeenCalledWith('GOOG', 1000.00, now);
+            it('should update price information', function () {
+                expect(uiProvider.setPrice).toHaveBeenCalledWith('GOOG', 1000.00, now);
             });
         });
     });
