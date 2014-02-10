@@ -194,15 +194,16 @@ $.ajax(url).done(function (res) {
     global.stockRetriever = global.stockRetriever || {};
 
     global.stockRetriever.dataProvider = {
-        getPrice: function (symbol) {
-            // Return promise, allowing clients to use:
-            //
-            // global.stockRetriver.dataProvider
-            //     .getPrice('MSFT')
-            //     .done(function (res) { /* Code here */ });
+        getPrices: function (symbols) {
+            return $.Deferred(function (dfd) {
+                // Perform ajax, resolve or reject the dfd
+            }).promise();
         }
     };
 })(this, jQuery);
+
+stockRetriever.dataProvider.getPrices('MSFT')
+    .done(function (res) { /* Code here */ });
                     </code></pre>
                 </section>
 
