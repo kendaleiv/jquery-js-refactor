@@ -24,9 +24,7 @@
                     var lastTradePrice = quote.find('LastTradePriceOnly').text();
     
                     deferred.resolve(lastTradePrice);
-                }).fail(function (jqXHR) {
-                    deferred.reject(jqXHR);
-                });
+                }).fail(deferred.reject);
             }).promise();
 
             return promise;
