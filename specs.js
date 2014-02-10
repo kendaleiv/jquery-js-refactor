@@ -96,6 +96,15 @@ describe('stockRetriever', function () {
                 uiProvider.setPrice('GOOG', 1000.00, new Date());
                 expect(selectors.priceLog.append).toHaveBeenCalled();
             });
+            
+            it('should prevent xss attacks', function () {
+                spyOn(selectors.currentPrice, 'html');
+
+                var now = new Date();
+                uiProvider.setPrice('<script>alert("pwned");</script>', 1000.00, now);
+                expect(selectors.currentPrice.html).toHaveBeenCalledWith(
+                    '<strong>&lt;script&gt;alert("pwned");&lt;/script&gt;</strong>: $1000 retrieved at ' + now.toString());
+            });
         });
     });
 

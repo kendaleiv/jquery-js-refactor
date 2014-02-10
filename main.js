@@ -78,12 +78,17 @@
             var selectors = this.configuration.selectors;
             var retrievedAtStr = retrievedAt.toString();
 
-            selectors.currentPrice.html('<strong>' + symbol + '</strong>: $' + price + ' retrieved at ' + retrievedAtStr);
-            selectors.priceLog.append('<li><strong>' + symbol + '</strong> $' + price + ' retrieved at ' + retrievedAtStr + '</li>');
+            selectors.currentPrice.html('<strong>' + htmlEncode(symbol) + '</strong>: $' + htmlEncode(price) + ' retrieved at ' + htmlEncode(retrievedAtStr));
+            selectors.priceLog.append('<li><strong>' + htmlEncode(symbol) + '</strong> $' + htmlEncode(price) + ' retrieved at ' + htmlEncode(retrievedAtStr) + '</li>');
 
             return this;
         }
     };
+
+    // http://stackoverflow.com/a/1219983/941536
+    function htmlEncode(value) {
+        return $('<div/>').text(value).html();
+    }
 })(this, jQuery);
 
 (function (global, $, uiProvider, dataProvider) {
