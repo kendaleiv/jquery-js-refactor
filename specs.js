@@ -5,6 +5,20 @@ describe('specs test', function () {
 });
 
 describe('stockRetriever', function () {
+    beforeEach(function () {
+        jasmine.addMatchers({
+            toBeADecimalNumber: function () {
+                return {
+                    compare: function (actual) {
+                        return {
+                            pass: typeof actual === 'number' && actual.toString().match(/\d+\.+\d+/)
+                        }
+                    }
+                };
+            }
+        });
+    });
+
     var stockRetriever = window.stockRetriever;
 
     describe('dataProvider', function () {
@@ -16,7 +30,7 @@ describe('stockRetriever', function () {
                 .done(function (res) {
                     var item = res[0];
                     expect(item.symbol).toMatch('MSFT');
-                    expect(item.lastTradePrice).toMatch(/\d.+/);
+                    expect(item.lastTradePrice).toBeADecimalNumber();
                     specDone();
                 });
         });
@@ -27,11 +41,11 @@ describe('stockRetriever', function () {
                 .done(function (res) {
                     var msft = res[0];
                     expect(msft.symbol).toMatch('MSFT');
-                    expect(msft.lastTradePrice).toMatch(/\d.+/);
+                    expect(msft.lastTradePrice).toBeADecimalNumber();
 
                     var goog = res[1];
                     expect(goog.symbol).toMatch('GOOG');
-                    expect(goog.lastTradePrice).toMatch(/\d.+/);
+                    expect(goog.lastTradePrice).toBeADecimalNumber();
 
                     specDone();
                 });
@@ -96,7 +110,7 @@ describe('stockRetriever', function () {
                 uiProvider.setPrice('GOOG', 1000.00, new Date());
                 expect(selectors.priceLog.append).toHaveBeenCalled();
             });
-            
+
             it('should prevent xss attacks', function () {
                 spyOn(selectors.currentPrice, 'html');
 
