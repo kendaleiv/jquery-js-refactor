@@ -262,17 +262,37 @@ it('should return single price', function (specDone) {
         .getPrices('MSFT')
         .done(function (res) {
             var item = res[0];
-            expect(item.symbol).toMatch('MSFT');
-            expect(item.lastTradePrice).toMatch(/\d.+/);
+            expect(item.symbol).toBe('MSFT');
+            expect(item.lastTradePrice).toBeADecimalNumber();
             specDone();
         });
+});
+                    </code></pre>
+                    <br />
+                    <p>Note: <code>toBeADecimalNumber</code> is a custom Jasmine matcher</p>
+                </section>
+
+                <section>
+                    <h2>Custom Jasmine matchers</h2>
+                    <pre><code data-trim contenteditable>
+beforeEach(function () {
+    jasmine.addMatchers({
+        toBeADecimalNumber: function () {
+            return {
+                compare: function (actual) {
+                    return {
+                        pass: typeof actual === 'number' && actual.toString().match(/\d+\.+\d+/)
+                    }
+                }
+            };
+        }
+    });
 });
                     </code></pre>
                 </section>
 
                 <section>
                     <h2>Jasmine makes mocking fun and easy</h2>
-                    <br />
                     <pre><code data-trim contenteditable>
 describe('init', function () {
     it('should create click handler on fetchButton selector', function () {
