@@ -29,7 +29,7 @@ describe('stockRetriever', function () {
                 .getPrices('MSFT')
                 .done(function (res) {
                     var item = res[0];
-                    expect(item.symbol).toMatch('MSFT');
+                    expect(item.symbol).toBe('MSFT');
                     expect(item.lastTradePrice).toBeADecimalNumber();
                     specDone();
                 });
@@ -40,11 +40,11 @@ describe('stockRetriever', function () {
                 .getPrices(['MSFT', 'GOOG'])
                 .done(function (res) {
                     var msft = res[0];
-                    expect(msft.symbol).toMatch('MSFT');
+                    expect(msft.symbol).toBe('MSFT');
                     expect(msft.lastTradePrice).toBeADecimalNumber();
 
                     var goog = res[1];
-                    expect(goog.symbol).toMatch('GOOG');
+                    expect(goog.symbol).toBe('GOOG');
                     expect(goog.lastTradePrice).toBeADecimalNumber();
 
                     specDone();
