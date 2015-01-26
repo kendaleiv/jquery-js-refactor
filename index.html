@@ -1,418 +1,418 @@
 <!doctype html>
 <html lang="en">
 
-    <head>
-        <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8">
 
-        <title>jquery-js-refactor / Refactor and Test jQuery/JS code</title>
+    <title>Refactor and Test jQuery/JS Code</title>
 
-        <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
-        <meta name="author" content="Ken Dale">
+    <meta name="description" content="Refactor and Test jQuery/JS Code">
+    <meta name="author" content="Ken Dale">
 
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
-        <link rel="stylesheet" href="css/reveal.min.css">
-        <link rel="stylesheet" href="css/theme/default.css" id="theme">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css" id="theme">
 
-        <!-- For syntax highlighting -->
-        <link rel="stylesheet" href="lib/css/zenburn.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
 
-        <!-- If the query includes 'print-pdf', use the PDF print sheet -->
-        <script>
-            document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
-        </script>
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
 
-        <!--[if lt IE 9]>
-        <script src="lib/js/html5shiv.js"></script>
-        <![endif]-->
-    </head>
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
 
-    <body>
+  <body>
 
-        <div class="reveal">
+    <div class="reveal">
 
-            <div class="slides">
-                <section>
-                    <h1>jquery-js-refactor</h1>
-                    <h3>Refactor and Test jQuery/JS code</h3>
-                    <br />
-                    <p><a href="http://kendaleiv.com">Ken Dale</a> / <a href="http://twitter.com/kendaleiv">@kendaleiv</a></p>
-                </section>
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
 
-                <section>
-                    <h2>Goal: Betterify this</h2>
-                    <pre><code data-trim contenteditable>
+        <section>
+          <h1>jquery-js-refactor</h1>
+          <h3>Refactor and Test jQuery/JS Code</h3>
+          <br />
+          <p><a href="http://kendaleiv.com">Ken Dale</a> / <a href="http://twitter.com/kendaleiv">@kendaleiv</a></p>
+        </section>
+
+        <section>
+          <h2>Goal: Betterify this</h2>
+          <pre><code data-trim contenteditable>
 $(document).ready(function () {
-    $('#fetch').click(function () {
-        var stockSymbol = $.trim($('#stock-symbol').val().toUpperCase());
+  $('#fetch').click(function () {
+    var stockSymbol = $.trim($('#stock-symbol').val().toUpperCase());
 
-        $.ajax('some_long_url', {
-            beforeSend: function() {
-                $('#current-stock-price').html('Loading ...');
-            },
-            success: function (res) {
-                var quote = $(res).find('[symbol="' + stockSymbol + '"]');
-                var lastTradePrice = quote.find('LastTradePriceOnly').text();
+    $.ajax('some_long_url', {
+      beforeSend: function() {
+        $('#current-stock-price').html('Loading ...');
+      },
+      success: function (res) {
+        var quote = $(res).find('[symbol="' + stockSymbol + '"]');
+        var lastTradePrice = quote.find('LastTradePriceOnly').text();
 
-                $('#current-stock-price').html('<strong>' + stockSymbol + '</strong>: $' + lastTradePrice + ' retrieved at ' + new Date().toString());
-                $('#stock-price-log').html($('#stock-price-log').html() + '<li><strong>' + stockSymbol + '</strong> $' + lastTradePrice + ' retrieved at ' + new Date().toString() + '</li>');
-            }
-        });
+        $('#current-stock-price').html('<strong>' + stockSymbol + '</strong>: $' + lastTradePrice + ' retrieved at ' + new Date().toString());
+        $('#stock-price-log').html($('#stock-price-log').html() + '<li><strong>' + stockSymbol + '</strong> $' + lastTradePrice + ' retrieved at ' + new Date().toString() + '</li>');
+      }
     });
+  });
 });
-                    </code></pre>
-                    <a href="https://github.com/kendaleiv/jquery-js-refactor/blob/c261e39b3291fc7a88c6accd0182a381917e776b/index.html">View on GitHub</a>
-                    <aside class="notes">
-                        <p>Talk through talking about the application itself</p>
-                        <p>Issues include:</p>
-                        <ul>
-                            <li>
-                                Mixing concerns between UI, AJAX, and overall application flow.
-                                Could result in an unmaintainable mess as more features are implemented.
-                                Writing tests against this code may be possible, but could be difficult.
-                            </li>
-                            <li>Non-cached jQuery selectors</li>
-                            <li>Opportunities for shorthand usage and/or better jQuery syntax.</li>
-                        </ul>
-                    </aside>
-                </section>
+          </code></pre>
+          <a href="https://github.com/kendaleiv/jquery-js-refactor/blob/c261e39b3291fc7a88c6accd0182a381917e776b/index.html">View on GitHub</a>
+          <aside class="notes">
+            <p>Talk through talking about the application itself</p>
+            <p>Issues include:</p>
+            <ul>
+              <li>
+                Mixing concerns between UI, AJAX, and overall application flow.
+                Could result in an unmaintainable mess as more features are implemented.
+                Writing tests against this code may be possible, but could be difficult.
+              </li>
+              <li>Non-cached jQuery selectors</li>
+              <li>Opportunities for shorthand usage and/or better jQuery syntax.</li>
+            </ul>
+          </aside>
+        </section>
 
-                <section>
-                    <h2>Why?</h2>
-                    <ul>
-                        <li>Maintainability</li>
-                        <li>Testability</li>
-                        <li>Warm fuzzies</li>
-                    </ul>
-                    <br />
-                    <img src="https://i.chzbgr.com/maxW500/1441938176/h9103CEC9/" />
-                </section>
+        <section>
+          <h2>Why?</h2>
+          <ul>
+            <li>Maintainability</li>
+            <li>Testability</li>
+            <li>Warm fuzzies</li>
+          </ul>
+          <br />
+          <img src="https://i.chzbgr.com/maxW500/1441938176/h9103CEC9/" />
+        </section>
 
-                <section>
-                    <h1>Quick Wins</h1>
-                </section>
+        <section>
+          <h1>Quick Wins</h1>
+        </section>
 
-                <section>
-                    <h2>Move JS to external file(s)</h2>
-                    <br />
-                    <p>Because, reasons.</p>
-                    <br />
-                    <br />
-                    <small>
-                        <ul>
-                            <li>Separation of concerns</li>
-                            <li>Cacheability</li>
-                        </ul>
-                    </small>
-                </section>
+        <section>
+          <h2>Move JS to external file(s)</h2>
+          <br />
+          <p>Because, reasons.</p>
+          <br />
+          <br />
+          <small>
+            <ul>
+              <li>Separation of concerns</li>
+              <li>Cacheability</li>
+            </ul>
+          </small>
+        </section>
 
-                <section>
-                    <h2>Strict mode</h2>
-                    <br />
-                    <pre><code data-trim contenteditable>
+        <section>
+          <h2>Strict mode</h2>
+          <br />
+          <pre><code data-trim contenteditable>
 function () {
-    'use strict';
+  'use strict';
 
-    // Code here
+  // Code here
 };
-                    </code></pre>
-                    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions_and_function_scope/Strict_mode">MDN</a>
-                </section>
+          </code></pre>
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions_and_function_scope/Strict_mode">MDN</a>
+        </section>
 
-                <section>
-                    <h2>Wrap in IIFE</h2>
-                    <pre><code data-trim contenteditable>
+        <section>
+          <h2>Wrap in IIFE</h2>
+          <pre><code data-trim contenteditable>
 (function () {
-    'use strict';
+  'use strict';
 
-    // Code here
+  // Code here
 })();
-                    </code></pre>
-                    <br />
-                    <p><a href="http://en.wikipedia.org/wiki/Immediately-invoked_function_expression">Immediately-invoked function expression</a></p>
-                    <br />
-                    <h3>For why?</h3>
-                    <ul>
-                        <li>Scope variables</li>
-                        <li>Prevent unintended sharing between components</li>
-                        <li>Shield your library from tampering</li>
-                    </ul>
-                </section>
+          </code></pre>
+          <br />
+          <p><a href="http://en.wikipedia.org/wiki/Immediately-invoked_function_expression">Immediately-invoked function expression</a></p>
+          <br />
+          <h3>For why?</h3>
+          <ul>
+            <li>Scope variables</li>
+            <li>Prevent unintended sharing between components</li>
+            <li>Shield your library from tampering</li>
+          </ul>
+        </section>
 
-                <section>
-                    <h2>Use the shorthand, Luke</h2>
-                    <p>These both offer equivalent functionality</p>
-                    <br />
-                    <pre><code data-trim contenteditable>
+        <section>
+          <h2>Use the shorthand, Luke</h2>
+          <p>These both offer equivalent functionality</p>
+          <br />
+          <pre><code data-trim contenteditable>
 $(document).ready(function () { /* Code here */ });
 
 $(function () { /* Code here */ });
-                    </code></pre>
-                </section>
+          </code></pre>
+        </section>
 
-                <section>
-                    <h2>Some jQuery things</h2>
-                    <br />
-                    <p>Use <code>on</code> rather than <code>click</code></p>
-                    <pre><code data-trim contenteditable>
+        <section>
+          <h2>Some jQuery things</h2>
+          <br />
+          <p>Use <code>on</code> rather than <code>click</code></p>
+          <pre><code data-trim contenteditable>
 $('#fetch').click(function () { /* Code here */ });
 
 $('#fetch').on('click', function () { /* Code here */ });
-                    </code></pre>
-                    <br />
-                    <p>Use <code>done</code> rather than <code>$.ajax</code> options <code>success</code></p>
-                    <pre><code data-trim contenteditable>
+          </code></pre>
+          <br />
+          <p>Use <code>done</code> rather than <code>$.ajax</code> options <code>success</code></p>
+          <pre><code data-trim contenteditable>
 $.ajax({ success: function (res) { /* Code here */ } });
 
 $.ajax().done(function (res) { /* Code here */ });
-                    </code></pre>
-                    <br />
-                    <br />
-                    <p>Avoid using deprecated things like <code><a href="http://api.jquery.com/live/">jQuery.live()</a></code></p>
-                </section>
+          </code></pre>
+          <br />
+          <p>Avoid using deprecated things like <code><a href="http://api.jquery.com/live/">jQuery.live()</a></code></p>
+        </section>
 
-                <section>
-                    <h1>Prepare Yourself</h1>
-                    <p>Refactoring ahead</p>
-                </section>
+        <section>
+          <h1>Prepare Yourself</h1>
+          <p>Refactoring ahead</p>
+        </section>
 
-                <section>
-                    <h2>Let's unmix those concerns</h2>
-                    <pre><code data-trim contenteditable>
+        <section>
+          <h2>Let's unmix those concerns</h2>
+          <pre><code data-trim contenteditable>
 $.ajax(url).done(function (res) {
-    var quote = $(res).find('[symbol="' + stockSymbol + '"]');
-    var lastTradePrice = quote.find('LastTradePriceOnly').text();
+  var quote = $(res).find('[symbol="' + stockSymbol + '"]');
+  var lastTradePrice = quote.find('LastTradePriceOnly').text();
 
-    // More code not related to getting the lastTradePrice
+  // More code not related to getting the lastTradePrice
 });
-                    </code></pre>
-                    <pre><code data-trim contenteditable>
+          </code></pre>
+          <pre><code data-trim contenteditable>
 (function (global, $) {
-    'use strict';
-    global.stockRetriever = global.stockRetriever || {};
+  'use strict';
+  global.stockRetriever = global.stockRetriever || {};
 
-    global.stockRetriever.dataProvider = {
-        getPrices: function (symbols) {
-            return $.Deferred(function (dfd) {
-                // Perform ajax, resolve or reject the dfd
-            }).promise();
-        }
-    };
+  global.stockRetriever.dataProvider = {
+    getPrices: function (symbols) {
+      return $.Deferred(function (dfd) {
+        // Perform ajax, resolve or reject the dfd
+      }).promise();
+    }
+  };
 })(this, jQuery);
 
 stockRetriever.dataProvider.getPrices('MSFT')
-    .done(function (res) { /* Code here */ });
-                    </code></pre>
-                </section>
+  .done(function (res) { /* Code here */ });
+          </code></pre>
+        </section>
 
-                <section>
-                    <h2>Lather, rinse, repeat</h2>
-                    <br />
-                    <p>
-                        If you want to explore further refactoring
-                        <br />
-                        examine
-                        <a href="https://github.com/kendaleiv/jquery-js-refactor/blob/c261e39b3291fc7a88c6accd0182a381917e776b/index.html">start</a>
-                        and
-                        <a href="https://github.com/kendaleiv/jquery-js-refactor/blob/master/main.js">finish</a>.
-                    </p>
-                </section>
+        <section>
+          <h2>Lather, rinse, repeat</h2>
+          <br />
+          <p>
+            If you want to explore further refactoring
+            <br />
+            examine
+            <a href="https://github.com/kendaleiv/jquery-js-refactor/blob/c261e39b3291fc7a88c6accd0182a381917e776b/index.html">start</a>
+            and
+            <a href="https://github.com/kendaleiv/jquery-js-refactor/blob/master/main.js">finish</a>.
+          </p>
+        </section>
 
-                <section>
-                    <h2>Start the app</h2>
-                    <p>Single obvious way to make it work.</p>
-                    <pre><code data-trim contenteditable>
+        <section>
+          <h2>Start the app</h2>
+          <p>Single obvious way to make it work.</p>
+          <pre><code data-trim contenteditable>
 (function (app) {
-    'use strict';
+  'use strict';
+
+  app.init();
+})(stockRetriever.app);
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Testing</h2>
+          <img src="https://i.chzbgr.com/maxW500/7974209024/hDB968B9D/" />
+          <p>Add tests while you refactor</p>
+        </section>
+
+        <section>
+          <h2>Testing with Jasmine</h2>
+          <pre><code data-trim contenteditable>
+describe('specs test', function () {
+  it('should pass simple test', function () {
+    expect(true).toBe(true);
+  });
+});
+          </code></pre>
+          <br />
+          <p>Simple, elegant, beautiful</p>
+          <br />
+          <p>No Disney princesses</p>
+        </section>
+
+        <section>
+          <h2>Async tests</h2>
+          <pre><code data-trim contenteditable>
+it('should return single price', function (specDone) {
+  dataProvider
+    .getPrices('MSFT')
+    .done(function (res) {
+      var item = res[0];
+      expect(item.symbol).toBe('MSFT');
+      expect(item.lastTradePrice).toBeADecimalNumber();
+      specDone();
+    });
+});
+          </code></pre>
+          <br />
+          <p>Note: <code>toBeADecimalNumber</code> is a custom Jasmine matcher</p>
+        </section>
+
+        <section>
+          <h2>Custom Jasmine matchers</h2>
+          <pre><code data-trim contenteditable>
+beforeEach(function () {
+  jasmine.addMatchers({
+    toBeADecimalNumber: function () {
+      return {
+        compare: function (actual) {
+          return {
+            pass: typeof actual === 'number' && actual.toString().match(/\d+\.+\d+/)
+          }
+        }
+      };
+    }
+  });
+});
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Jasmine makes mocking<br />fun and easy</h2>
+          <pre><code data-trim contenteditable>
+describe('init', function () {
+  it('should create click handler on fetchButton selector', function () {
+    var selectors = app.configuration.selectors;
+    spyOn(selectors.fetchButton, 'on');
 
     app.init();
-})(stockRetriever.app);
-                    </code></pre>
-                </section>
-
-                <section>
-                    <h2>Testing</h2>
-                    <img src="https://i.chzbgr.com/maxW500/7974209024/hDB968B9D/" />
-                    <p>Add tests while you refactor</p>
-                </section>
-
-                <section>
-                    <h2>Testing with Jasmine</h2>
-                    <pre><code data-trim contenteditable>
-describe('specs test', function () {
-    it('should pass simple test', function () {
-        expect(true).toBe(true);
-    });
+    expect(selectors.fetchButton.on).toHaveBeenCalledWith('click', app.fetch);
+  });
 });
-                    </code></pre>
-                    <br />
-                    <p>Simple, elegant, beautiful</p>
-                    <br />
-                    <p>No Disney princesses</p>
-                </section>
+          </code></pre>
+        </section>
 
-                <section>
-                    <h2>Async tests</h2>
-                    <pre><code data-trim contenteditable>
-it('should return single price', function (specDone) {
-    dataProvider
-        .getPrices('MSFT')
-        .done(function (res) {
-            var item = res[0];
-            expect(item.symbol).toBe('MSFT');
-            expect(item.lastTradePrice).toBeADecimalNumber();
-            specDone();
-        });
-});
-                    </code></pre>
-                    <br />
-                    <p>Note: <code>toBeADecimalNumber</code> is a custom Jasmine matcher</p>
-                </section>
-
-                <section>
-                    <h2>Custom Jasmine matchers</h2>
-                    <pre><code data-trim contenteditable>
-beforeEach(function () {
-    jasmine.addMatchers({
-        toBeADecimalNumber: function () {
-            return {
-                compare: function (actual) {
-                    return {
-                        pass: typeof actual === 'number' && actual.toString().match(/\d+\.+\d+/)
-                    }
-                }
-            };
-        }
-    });
-});
-                    </code></pre>
-                </section>
-
-                <section>
-                    <h2>Jasmine makes mocking fun and easy</h2>
-                    <pre><code data-trim contenteditable>
-describe('init', function () {
-    it('should create click handler on fetchButton selector', function () {
-        var selectors = app.configuration.selectors;
-        spyOn(selectors.fetchButton, 'on');
-
-        app.init();
-        expect(selectors.fetchButton.on).toHaveBeenCalledWith('click', app.fetch);
-    });
-});
-                    </code></pre>
-                </section>
-
-                <section>
-                    <h2><a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY</a> your test code</h2>
-                    <pre><code data-trim contenteditable>
+        <section>
+          <h2><a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY</a> your test code</h2>
+          <pre><code data-trim contenteditable>
 describe('fetch', function () {
-    var dataProvider = stockRetriever.dataProvider;
-    var uiProvider = stockRetriever.uiProvider;
-    var now = new Date();
+  var dataProvider = stockRetriever.dataProvider;
+  var uiProvider = stockRetriever.uiProvider;
+  var now = new Date();
 
-    beforeEach(function () {
-        spyOn(dataProvider, 'getPrices').and.callFake(function () {
-            return $.Deferred(function (dfd) {
-                dfd.resolve([{
-                    symbol: 'GOOG',
-                    lastTradePrice: 1000.00,
-                    retrieved: now
-                }]);
-            }).promise();
-        });
-
-        spyOn(uiProvider, 'displayLoading');
-        spyOn(uiProvider, 'getSymbol').and.returnValue('GOOG');
-        spyOn(uiProvider, 'setPrice');
-
-        app.fetch();
+  beforeEach(function () {
+    spyOn(dataProvider, 'getPrices').and.callFake(function () {
+      return $.Deferred(function (dfd) {
+        dfd.resolve([{
+          symbol: 'GOOG',
+          lastTradePrice: 1000.00,
+          retrieved: now
+        }]);
+      }).promise();
     });
 
-    it('should get symbol', function () {
-        expect(uiProvider.getSymbol).toHaveBeenCalled();
-    });
+    spyOn(uiProvider, 'displayLoading');
+    spyOn(uiProvider, 'getSymbol').and.returnValue('GOOG');
+    spyOn(uiProvider, 'setPrice');
 
-    it('should display loading', function () {
-        expect(uiProvider.displayLoading).toHaveBeenCalled();
-    });
+    app.fetch();
+  });
 
-    it('should get price', function () {
-        expect(dataProvider.getPrices).toHaveBeenCalledWith('GOOG');
-    });
+  it('should get symbol', function () {
+    expect(uiProvider.getSymbol).toHaveBeenCalled();
+  });
 
-    it('should update price information', function () {
-        expect(uiProvider.setPrice).toHaveBeenCalledWith('GOOG', 1000.00, now);
-    });
+  it('should display loading', function () {
+    expect(uiProvider.displayLoading).toHaveBeenCalled();
+  });
+
+  it('should get price', function () {
+    expect(dataProvider.getPrices).toHaveBeenCalledWith('GOOG');
+  });
+
+  it('should update price information', function () {
+    expect(uiProvider.setPrice).toHaveBeenCalledWith('GOOG', 1000.00, now);
+  });
 });
-                    </code></pre>
-                </section>
+          </code></pre>
+        </section>
 
-                <section>
-                    <h2>There are other ways to modularize</h2>
-                    <p>requirejs, ES6 modules, etc.</p>
-                    <br />
-                    <br />
-                    <br />
-                    <p>This uses manual dependency ordering &mdash; it's a simple small app.</p>
-                    <br />
-                    <h2>SIMPLICITY</h2>
-                </section>
+        <section>
+          <h2>There are other ways to modularize</h2>
+          <p>requirejs, ES6 modules, etc.</p>
+          <br />
+          <br />
+          <br />
+          <p>This uses manual dependency ordering &mdash;<br />it's a simple small app.</p>
+          <br />
+          <h2>SIMPLICITY</h2>
+        </section>
 
-                <section>
-                    <h2>Code</h2>
-                    <br />
-                    <p><a href="https://github.com/kendaleiv/jquery-js-refactor/blob/c261e39b3291fc7a88c6accd0182a381917e776b/index.html">Start</a></p>
-                    <h2>&darr;</h2>
-                    <p><a href="https://github.com/kendaleiv/jquery-js-refactor/blob/master/index.html">Finish &mdash; HTML</a></p>
-                    <p><a href="https://github.com/kendaleiv/jquery-js-refactor/blob/master/main.js">Finish &mdash; JS</a></p>
-                    <p><a href="https://github.com/kendaleiv/jquery-js-refactor/blob/master/specs.js">Specs</a></p>
-                </section>
+        <section>
+          <h2>Code</h2>
+          <br />
+          <p><a href="https://github.com/kendaleiv/jquery-js-refactor/blob/c261e39b3291fc7a88c6accd0182a381917e776b/index.html">Start</a></p>
+          <h2>&darr;</h2>
+          <p><a href="https://github.com/kendaleiv/jquery-js-refactor/blob/master/index.html">Finish &mdash; HTML</a></p>
+          <p><a href="https://github.com/kendaleiv/jquery-js-refactor/blob/master/main.js">Finish &mdash; JS</a></p>
+          <p><a href="https://github.com/kendaleiv/jquery-js-refactor/blob/master/specs.js">Specs</a></p>
+        </section>
 
-                <section>
-                    <h2>Questions?</h2>
-                    <p><a href="http://kendaleiv.com">Ken Dale</a> / <a href="http://twitter.com/kendaleiv">@kendaleiv</a></p>
-                </section>
+        <section>
+          <h2>Questions?</h2>
+          <p><a href="http://kendaleiv.com">Ken Dale</a> / <a href="http://twitter.com/kendaleiv">@kendaleiv</a></p>
+        </section>
 
-            </div>
+      </div>
 
-        </div>
+    </div>
 
-        <script src="lib/js/head.min.js"></script>
-        <script src="js/reveal.min.js"></script>
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
 
-        <script>
+    <script>
 
-            // Full list of configuration options available here:
-            // https://github.com/hakimel/reveal.js#configuration
-            Reveal.initialize({
-                controls: true,
-                progress: true,
-                history: true,
-                center: true,
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
 
-                theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
-                transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
 
-                // Parallax scrolling
-                // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
-                // parallaxBackgroundSize: '2100px 900px',
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'plugin/zoom-js/zoom.js', async: true },
+          { src: 'plugin/notes/notes.js', async: true }
+        ]
+      });
 
-                // Optional libraries used to extend on reveal.js
-                dependencies: [
-                    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-                    { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-                    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-                    { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-                    { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
-                ]
-            });
+    </script>
 
-        </script>
-
-    </body>
+  </body>
 </html>
