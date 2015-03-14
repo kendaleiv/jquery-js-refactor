@@ -1,6 +1,6 @@
 jquery-js-refactor
 ==================
 
-Refactor and Test jQuery / JS Code
+Writing Better jQuery Infused JavaScript
 
 Presentation (on the *gh-pages* branch): http://kendaleiv.github.io/jquery-js-refactor/
