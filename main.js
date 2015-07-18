@@ -7,7 +7,7 @@
             if (typeof symbols !== 'string' && !$.isArray(symbols)) {
                 throw new TypeError('Must provide a string or an array for symbols.');
             }
-            
+
             if (typeof symbols === 'string') {
                 symbols = [symbols];
             }
@@ -36,7 +36,7 @@
         var $query = $(xml).find('query').first();
         var created = new Date($query.attr('yahoo:created'));
         var quotes = $query.find('quote').get();
-        
+
         return quotes.map(function (quote) {
             var $quote = $(quote);
             return {
