@@ -8,7 +8,9 @@
     "lib/"
   ],
   "keywords": [
-    "jquery","refactor","test"
+    "jquery",
+    "refactor",
+    "test"
   ],
   "license": "MIT",
   "repository": {
@@ -22,6 +24,7 @@
     "coverage": "nyc --reporter=lcov --reporter=text --reporter=html npm test",
     "coveralls": "npm run coverage && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "lint": "eslint src test",
+    "start": "node server.js",
     "test": "ava --require babel-core/register",
     "validate": "npm run lint && npm test",
     "prepare": "npm run build && npm run validate && npm run check",
@@ -38,7 +41,9 @@
   "pre-commit": [
     "validate"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "express": "^4.14.0"
+  },
   "devDependencies": {
     "ava": "^0.16.0",
     "babel-cli": "^6.5.1",
