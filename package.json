@@ -25,6 +25,7 @@
     "coveralls": "npm run coverage && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "lint": "eslint src test",
     "start": "npm run build && node server.js",
+    "start:watch": "npm run build -- --watch && node server.js",
     "test": "ava --require babel-core/register",
     "validate": "npm run lint && npm test",
     "prepare": "npm run build && npm run validate && npm run check",
