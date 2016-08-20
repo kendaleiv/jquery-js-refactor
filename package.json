@@ -1,6 +1,7 @@
 {
   "name": "jquery-js-refactor",
   "version": "0.0.0",
+  "private": true,
   "description": "Modern jQuery: Refactoring and Testing the Way Forward",
   "main": "lib/index.js",
   "files": [
