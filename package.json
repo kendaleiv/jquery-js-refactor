@@ -19,12 +19,12 @@
   },
   "scripts": {
     "audit": "nsp check package",
-    "build": "babel -d ./ ./src",
+    "build": "webpack ./src/index.js ./public/webpack-output/bundle.js",
     "check": "npm run audit && npm outdated --depth 0",
     "coverage": "nyc --reporter=lcov --reporter=text --reporter=html npm test",
     "coveralls": "npm run coverage && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "lint": "eslint src test",
-    "start": "node server.js",
+    "start": "npm run build && node server.js",
     "test": "ava --require babel-core/register",
     "validate": "npm run lint && npm test",
     "prepare": "npm run build && npm run validate && npm run check",
@@ -56,6 +56,7 @@
     "nsp": "^2.2.0",
     "nyc": "^8.1.0",
     "pmm": "^1.3.0",
-    "pre-commit": "^1.1.2"
+    "pre-commit": "^1.1.2",
+    "webpack": "^1.13.2"
   }
 }
