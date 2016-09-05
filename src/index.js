@@ -1,6 +1,6 @@
 /* eslint-env jquery */
 
-$(document).ready(function () {
+$(function () {
   $('#fetch').click(function () {
     const stockSymbol = $.trim($('#stock-symbol').val().toUpperCase());
     const url = 'http://query.yahooapis.com/v1/public/yql'
