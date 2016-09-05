@@ -1,4 +1,4 @@
-/* eslint-env jquery */
+import $ from 'jquery';
 
 $(function () {
   $('#fetch').on('click', () => {
