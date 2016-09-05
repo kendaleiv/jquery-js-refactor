@@ -25,7 +25,7 @@
     "coveralls": "npm run coverage && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "lint": "eslint src test",
     "start": "npm run build && node server.js",
-    "start:watch": "npm run build -- --watch && node server.js",
+    "start:watch": "concurrently -k -r \"npm run build -- --watch\" \"node server.js\"",
     "test": "ava --require babel-core/register",
     "validate": "npm run lint && npm test"
   },
@@ -47,6 +47,7 @@
     "babel-eslint": "^6.0.0",
     "babel-plugin-transform-function-bind": "^6.5.2",
     "babel-preset-es2015": "^6.5.0",
+    "concurrently": "^2.2.0",
     "coveralls": "^2.11.9",
     "eslint": "^3.3.1",
     "nsp": "^2.2.0",
