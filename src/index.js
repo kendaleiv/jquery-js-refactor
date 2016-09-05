@@ -1,7 +1,7 @@
 /* eslint-env jquery */
 
 $(function () {
-  $('#fetch').click(function () {
+  $('#fetch').on('click', function () {
     const stockSymbol = $.trim($('#stock-symbol').val().toUpperCase());
     const url = 'http://query.yahooapis.com/v1/public/yql'
       + `?q=select * from yahoo.finance.quotes where symbol in ("${stockSymbol}")`
