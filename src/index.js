@@ -1,23 +1,19 @@
 import $ from 'jquery';
 
 import DataProvider from './data-provider';
+import UiProvider from './ui-provider';
 
 $(function () {
   const dataProvider = new DataProvider();
+  const uiProvider = new UiProvider();
 
   $('#fetch').on('click', () => {
-    const stockSymbol = $.trim($('#stock-symbol').val().toUpperCase());
+    const stockSymbol = uiProvider.getStockSymbol();
 
-    $('#current-stock-price').html('Loading ...');
+    uiProvider.displayLoading();
 
     dataProvider.getStockPrice(stockSymbol).then(lastTradePrice => {
-      $('#current-stock-price').html(
-        `<strong>${stockSymbol}</strong>: $${lastTradePrice}`
-        + ` retrieved at ${new Date().toString()}`);
-
-      $('#stock-price-log').html(
-        `${$('#stock-price-log').html()}<li><strong>${stockSymbol}</strong> $${lastTradePrice}`
-        + ` retrieved at ${new Date().toString()}</li>`);
+      uiProvider.setStockPrice(stockSymbol, lastTradePrice);
     });
   });
 });
