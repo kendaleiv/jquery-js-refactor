@@ -45,7 +45,8 @@
   ],
   "dependencies": {
     "express": "^4.14.0",
-    "jquery": "^1.10.1"
+    "jquery": "^1.10.1",
+    "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {
     "ava": "^0.16.0",

@@ -1,5 +1,8 @@
 module.exports = {
-  entry: './src/index.js',
+  entry: [
+    'whatwg-fetch',
+    './src/index.js'
+  ],
   output: {
     path: './public/webpack-output',
     filename: 'bundle.js'
