@@ -1,19 +1,16 @@
 import $ from 'jquery';
 
+import DataProvider from './data-provider';
+
 $(function () {
+  const dataProvider = new DataProvider();
+
   $('#fetch').on('click', () => {
     const stockSymbol = $.trim($('#stock-symbol').val().toUpperCase());
-    const url = 'http://query.yahooapis.com/v1/public/yql'
-      + `?q=select * from yahoo.finance.quotes where symbol in ("${stockSymbol}")`
-      + '&diagnostics=true'
-      + '&env=http://datatables.org/alltables.env';
 
     $('#current-stock-price').html('Loading ...');
 
-    $.ajax(url).done(res => {
-      const quote = $(res).find(`[symbol="${stockSymbol}"]`);
-      const lastTradePrice = quote.find('LastTradePriceOnly').text();
-
+    dataProvider.getStockPrice(stockSymbol).then(lastTradePrice => {
       $('#current-stock-price').html(
         `<strong>${stockSymbol}</strong>: $${lastTradePrice}`
         + ` retrieved at ${new Date().toString()}`);
