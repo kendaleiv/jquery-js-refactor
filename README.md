@@ -1,10 +1,15 @@
 # jquery-js-refactor
 
-**Writing Better jQuery Infused JavaScript**
+This repository contains these talks in a combined fashion:
 
-The latest of the **master** branch is the refactored + tests added state.
+## Modern jQuery: Refactoring and Testing the Way Forward
 
-You can view the [initial state](https://github.com/kendaleiv/jquery-js-refactor/tree/c261e39b3291fc7a88c6accd0182a381917e776b) before the refactoring and testing began, then follow the progress of the **master** branch to see how everything took shape over time.
+**Code:** [**modern-js**](https://github.com/kendaleiv/jquery-js-refactor/tree/modern-js) branch
 
-## Presentation
-http://kendaleiv.github.io/jquery-js-refactor/ (see the *gh-pages* branch)
+**Presentation:** http://kendaleiv.github.io/jquery-js-refactor/ (see the [**gh-pages**](https://github.com/kendaleiv/jquery-js-refactor/tree/gh-pages) branch)
+
+## Writing Better jQuery Infused JavaScript
+
+**Code:** [**master**](https://github.com/kendaleiv/jquery-js-refactor/tree/master) branch
+
+**Presentation:** See files at [74face0](https://github.com/kendaleiv/jquery-js-refactor/tree/74face0d1b04b359520f2386d169885a6923d574)
