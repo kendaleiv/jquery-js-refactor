@@ -4,9 +4,9 @@
   <head>
     <meta charset="utf-8">
 
-    <title>Writing Better jQuery Infused JavaScript</title>
+    <title>Modern jQuery: Refactoring and Testing the Way Forward</title>
 
-    <meta name="description" content="Writing Better jQuery Infused JavaScript">
+    <meta name="description" content="Modern jQuery: Refactoring and Testing the Way Forward">
     <meta name="author" content="Ken Dale">
 
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -42,10 +42,17 @@
       <div class="slides">
 
         <section>
-          <h1>jquery-js-refactor</h1>
-          <p>Writing Better jQuery Infused JavaScript</p>
+          <p>Modern jQuery: Refactoring and Testing the Way Forward</p>
           <br />
           <p><a href="http://kendaleiv.com">Ken Dale</a> / <a href="http://twitter.com/kendaleiv">@kendaleiv</a></p>
+        </section>
+
+        <section>
+          <a href="https://trends.builtwith.com/javascript/jQuery">https://trends.builtwith.com/javascript/jQuery</a>
+        </section>
+
+        <section>
+          <h2>Rewrites</h2>
         </section>
 
         <section>
@@ -88,105 +95,53 @@ $(document).ready(function () {
 
         <section>
           <h2>Why?</h2>
-          <ul>
-            <li>Maintainability</li>
-            <li>Testability</li>
-            <li>Warm fuzzies</li>
-          </ul>
-          <br />
+        </section>
+
+        <section>
           <img src="https://i.chzbgr.com/maxW500/1441938176/h9103CEC9/" />
         </section>
 
         <section>
-          <h1>Quick Wins</h1>
+          <p>Maintainability, testability, warm fuzzies</p>
         </section>
 
         <section>
-          <h2>Move JS to external file(s)</h2>
+          <p>External files, strict mode, IIFE</p>
           <br />
-          <p>Because, reasons.</p>
-          <aside class="notes">
-            <ul>
-              <li>Separation of concerns</li>
-              <li>Cacheability</li>
-              <li>HSTS</li>
-            </ul>
-          </aside>
+          <br />
+          <br />
+          <br />
+          <p class="fragment"><strong><code>import { something } from 'somewhere';</code></strong></p>
         </section>
 
         <section>
-          <h2>Strict mode</h2>
-          <br />
-          <pre><code data-trim contenteditable>
-function () {
-  'use strict';
-
-  // Code here
-};
-          </code></pre>
-          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions_and_function_scope/Strict_mode">MDN</a>
+          <p>Continue using jQuery</p>
         </section>
 
         <section>
-          <h2>Wrap in IIFE</h2>
-          <pre><code data-trim contenteditable>
-(function () {
-  'use strict';
-
-  // Code here
-})();
-          </code></pre>
+          <p>Or, switch to something else</p>
           <br />
-          <p><a href="http://en.wikipedia.org/wiki/Immediately-invoked_function_expression">Immediately-invoked function expression</a></p>
-          <aside class="notes">
-            <p>Why?</p>
-            <ul>
-              <li>Scope variables</li>
-              <li>Prevent unintended sharing between components</li>
-              <li>Shield your library from tampering</li>
-            </ul>
-          </aside>
+          <br />
+          <br />
+          <small>(<code>fetch</code>, etc.)</small>
         </section>
 
         <section>
-          <h2>Use the shorthand, Luke</h2>
-          <p>These both offer equivalent functionality</p>
-          <br />
-          <pre><code data-trim contenteditable>
-$(document).ready(function () { /* Code here */ });
-
-$(function () { /* Code here */ });
-          </code></pre>
-        </section>
-
-        <section>
-          <h2>Some jQuery things</h2>
-          <br />
-          <p>Use <code>on</code> rather than <code>click</code></p>
-          <pre><code data-trim contenteditable>
-$('#fetch').click(function () { /* Code here */ });
-
-$('#fetch').on('click', function () { /* Code here */ });
-          </code></pre>
-          <br />
-          <p>Use <code>done</code> rather than <code>$.ajax</code> options <code>success</code></p>
-          <pre><code data-trim contenteditable>
-$.ajax({ success: function (res) { /* Code here */ } });
-
-$.ajax().done(function (res) { /* Code here */ });
-          </code></pre>
-          <br />
-          <p>Avoid using deprecated things like <code><a href="http://api.jquery.com/live/">jQuery.live()</a></code></p>
+          <h2>You decide</h2>
         </section>
 
         <section>
           <h1>Prepare Yourself</h1>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
           <p>Refactoring ahead</p>
         </section>
 
-        <section>
-          <h2>Let's unmix those concerns</h2>
-          <pre><code data-trim contenteditable>
+        <section style="font-size: 30px;">
+          <pre style="margin-top: -50px;"><code data-trim contenteditable>
 $.ajax(url).done(function (res) {
   var quote = $(res).find('[symbol="' + stockSymbol + '"]');
   var lastTradePrice = quote.find('LastTradePriceOnly').text();
@@ -194,22 +149,36 @@ $.ajax(url).done(function (res) {
   // More code not related to getting the lastTradePrice
 });
           </code></pre>
-          <pre><code data-trim contenteditable>
-(function (global, $) {
-  'use strict';
-  global.stockRetriever = global.stockRetriever || {};
+          <pre><code style="max-height: 570px;" data-trim contenteditable>
+// data-provider.js
+import $ from 'jquery';
 
-  global.stockRetriever.dataProvider = {
-    getPrices: function (symbols) {
-      return $.Deferred(function (dfd) {
-        // Perform ajax, resolve or reject the dfd
-      }).promise();
+export default class DataProvider {
+  getStockPrice(stockSymbol) {
+    if (!stockSymbol) {
+      throw new Error('Must provide a stockSymbol');
     }
-  };
-})(this, jQuery);
 
-stockRetriever.dataProvider.getPrices('MSFT')
-  .done(function (res) { /* Code here */ });
+    const url = 'http://query.yahooapis.com/v1/public/yql'
+      + `?q=select * from yahoo.finance.quotes where symbol in ("${stockSymbol}")`
+      + '&diagnostics=true'
+      + '&env=http://datatables.org/alltables.env';
+
+    return fetch(url)
+      .then(res => res.text())
+      .then(text => {
+        const quote = $(text).find(`[symbol="${stockSymbol}"]`);
+        const lastTradePrice = quote.find('LastTradePriceOnly').text();
+
+        return lastTradePrice;
+      });
+  }
+}
+
+// Usage:
+new DataProvider().getStockPrice('MSFT').then(lastTradePrice => {
+  /* Code here */
+});
           </code></pre>
         </section>
 
@@ -222,7 +191,7 @@ stockRetriever.dataProvider.getPrices('MSFT')
             examine
             <a href="https://github.com/kendaleiv/jquery-js-refactor/blob/c261e39b3291fc7a88c6accd0182a381917e776b/index.html">start</a>
             and
-            <a href="https://github.com/kendaleiv/jquery-js-refactor/blob/master/main.js">finish</a>.
+            <a href="https://github.com/kendaleiv/jquery-js-refactor/tree/modern-js">finish</a>.
           </p>
         </section>
 
@@ -230,11 +199,12 @@ stockRetriever.dataProvider.getPrices('MSFT')
           <h2>Start the app</h2>
           <p>Single obvious way to make it work.</p>
           <pre><code data-trim contenteditable>
-(function (app) {
-  'use strict';
+import StockRetriever from './stock-retriever';
+import DataProvider from './data-provider';
+import UiProvider from './ui-provider';
 
-  app.init();
-})(stockRetriever.app);
+new StockRetriever(new DataProvider(), new UiProvider())
+  .init();
           </code></pre>
         </section>
 
@@ -245,124 +215,74 @@ stockRetriever.dataProvider.getPrices('MSFT')
         </section>
 
         <section>
-          <h2>Testing with Jasmine</h2>
+          <h2>Testing with AVA</h2>
           <pre><code data-trim contenteditable>
-describe('specs test', function () {
-  it('should pass simple test', function () {
-    expect(true).toBe(true);
-  });
+import test from 'ava';
+
+test('simple test', t => {
+  t.true(true);
 });
           </code></pre>
           <br />
-          <p>Simple is nice.</p>
-          <br />
-          <small>Yup, other frameworks/libraries may be similar.</small>
+          <small>Jasmine is nice, too!</small>
         </section>
 
         <section>
-          <h2>Async tests</h2>
+          <h2>AVA: Promises</h2>
           <pre><code data-trim contenteditable>
-it('should return single price', function (specDone) {
-  dataProvider
-    .getPrices('MSFT')
-    .done(function (res) {
-      var item = res[0];
-      expect(item.symbol).toBe('MSFT');
-      expect(item.lastTradePrice).toBeADecimalNumber();
-      specDone();
+import test from 'ava';
+
+test('should return stock price', t => {
+  return new DataProvider()
+    .getStockPrice('TEST')
+    .then(lastTradePrice => {
+      t.is(lastTradePrice, '123.45');
     });
 });
           </code></pre>
-          <br />
-          <p>Note: <code>toBeADecimalNumber</code> is a custom Jasmine matcher</p>
         </section>
 
         <section>
-          <h2>Custom Jasmine matchers</h2>
-          <pre><code data-trim contenteditable>
-beforeEach(function () {
-  jasmine.addMatchers({
-    toBeADecimalNumber: function () {
-      return {
-        compare: function (actual) {
-          return {
-            pass: typeof actual === 'number' && actual.toString().match(/\d+\.+\d+/)
-          }
-        }
-      };
-    }
-  });
+          <h2>fetch-mock</h2>
+          <pre class="stretch"><code data-trim contenteditable>
+import test from 'ava';
+import fetchMock from 'fetch-mock';
+
+import DataProvider from '../src/data-provider';
+
+test.beforeEach(() => {
+  const response = `<?xml version="1.0" encoding="UTF-8"?>
+<query><results><quote symbol="TEST"><LastTradePriceOnly>123.45</LastTradePriceOnly></quote></results></query>`;
+
+  fetchMock.get('*', response);
 });
-          </code></pre>
-        </section>
 
-        <section>
-          <h2>Jasmine makes mocking<br />fun and easy</h2>
-          <pre><code data-trim contenteditable>
-describe('init', function () {
-  it('should create click handler on fetchButton selector', function () {
-    var selectors = app.configuration.selectors;
-    spyOn(selectors.fetchButton, 'on');
-
-    app.init();
-    expect(selectors.fetchButton.on).toHaveBeenCalledWith('click', app.fetch);
-  });
+test.afterEach(() => {
+  fetchMock.restore();
 });
-          </code></pre>
-        </section>
 
-        <section>
-          <h2><a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY</a> your test code</h2>
-          <pre><code data-trim contenteditable>
-describe('fetch', function () {
-  var dataProvider = stockRetriever.dataProvider;
-  var uiProvider = stockRetriever.uiProvider;
-  var now = new Date();
-
-  beforeEach(function () {
-    spyOn(dataProvider, 'getPrices').and.callFake(function () {
-      return $.Deferred(function (dfd) {
-        dfd.resolve([{
-          symbol: 'GOOG',
-          lastTradePrice: 1000.00,
-          retrieved: now
-        }]);
-      }).promise();
+test('should return stock price', t => {
+  return new DataProvider()
+    .getStockPrice('TEST')
+    .then(lastTradePrice => {
+      t.is(lastTradePrice, '123.45');
     });
-
-    spyOn(uiProvider, 'displayLoading');
-    spyOn(uiProvider, 'getSymbol').and.returnValue('GOOG');
-    spyOn(uiProvider, 'setPrice');
-
-    app.fetch();
-  });
-
-  it('should get symbol', function () {
-    expect(uiProvider.getSymbol).toHaveBeenCalled();
-  });
-
-  it('should display loading', function () {
-    expect(uiProvider.displayLoading).toHaveBeenCalled();
-  });
-
-  it('should get price', function () {
-    expect(dataProvider.getPrices).toHaveBeenCalledWith('GOOG');
-  });
-
-  it('should update price information', function () {
-    expect(uiProvider.setPrice).toHaveBeenCalledWith('GOOG', 1000.00, now);
-  });
 });
           </code></pre>
         </section>
 
         <section>
-          <h2>There are other ways to modularize</h2>
-          <p>requirejs, ES6 modules, etc.</p>
-          <br />
-          <br />
-          <br />
-          <p>This uses manual dependency ordering &mdash;<br />it's a simple small app.</p>
+          AVA: Using jQuery with the DOM
+        </section>
+
+        <section>
+          <pre><code data-trim contenteditable>
+// https://github.com/avajs/ava/blob/20ab39de046e527dec7b369f375d6c8e5fd4f5e1/docs/recipes/browser-testing.md#setup-jsdom
+
+global.document = require('jsdom').jsdom('<body></body>');
+global.window = document.defaultView;
+global.navigator = window.navigator;
+          </code></pre>
         </section>
 
         <section>
@@ -370,9 +290,7 @@ describe('fetch', function () {
           <br />
           <p><a href="https://github.com/kendaleiv/jquery-js-refactor/blob/c261e39b3291fc7a88c6accd0182a381917e776b/index.html">Start</a></p>
           <h2>&darr;</h2>
-          <p><a href="https://github.com/kendaleiv/jquery-js-refactor/blob/master/index.html">Finish &mdash; HTML</a></p>
-          <p><a href="https://github.com/kendaleiv/jquery-js-refactor/blob/master/main.js">Finish &mdash; JS</a></p>
-          <p><a href="https://github.com/kendaleiv/jquery-js-refactor/blob/master/specs.js">Specs</a></p>
+          <p><a href="https://github.com/kendaleiv/jquery-js-refactor/tree/modern-js">Finish</a></p>
         </section>
 
         <section>
@@ -385,8 +303,9 @@ describe('fetch', function () {
           <h2>Quick recap</h2>
           <br />
           <ul>
-            <li class="fragment">DRY your code</li>
-            <li class="fragment">Add tests while you do it</li>
+            <li class="fragment">Refactor into modules (or, any <em>modular</em> approach).</li>
+            <li class="fragment">Make decisions along the way.</li>
+            <li class="fragment">Add tests, too!</li>
           </ul>
           <br />
           <br />
@@ -419,12 +338,12 @@ describe('fetch', function () {
       // Full list of configuration options available at:
       // https://github.com/hakimel/reveal.js#configuration
       Reveal.initialize({
-        controls: true,
-        progress: true,
+        controls: false,
+        progress: false,
         history: true,
         center: true,
 
-        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        transition: 'none', // none/fade/slide/convex/concave/zoom
 
         // Optional reveal.js plugins
         dependencies: [
