@@ -27,6 +27,7 @@
     "start": "npm run build && node server.js",
     "start:watch": "concurrently -k -r \"npm run build -- --watch\" \"node server.js\"",
     "test": "ava",
+    "test:watch": "ava --watch",
     "validate": "npm run lint && npm test"
   },
   "ava": {
