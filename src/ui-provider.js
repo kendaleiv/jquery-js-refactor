@@ -4,11 +4,22 @@ export default class UiProvider {
   constructor() {
     this.configuration = {
       selectors: {
+        fetchButton: $('#fetch'),
         stockSymbol: $('#stock-symbol'),
         currentStockPrice: $('#current-stock-price'),
         stockPriceLog: $('#stock-price-log')
       }
     };
+  }
+
+  init() {
+    const selectors = this.configuration.selectors;
+
+    $(() => {
+      selectors.fetchButton.on('click', () => {
+        this.fetch();
+      });
+    });
   }
 
   displayLoading() {
