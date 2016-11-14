@@ -1,25 +1,11 @@
-import $ from 'jquery';
-
 export default class StockRetriever {
   constructor(dataProvider, uiProvider) {
     this.dataProvider = dataProvider;
     this.uiProvider = uiProvider;
-
-    this.configuration = {
-      selectors: {
-        fetchButton: $('#fetch')
-      }
-    };
   }
 
   init() {
-    const selectors = this.configuration.selectors;
-
-    $(() => {
-      selectors.fetchButton.on('click', () => {
-        this.fetch();
-      });
-    });
+    this.uiProvider.init();
   }
 
   fetch() {

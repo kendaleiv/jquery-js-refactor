@@ -23,6 +23,7 @@ test.beforeEach(() => {
 
   sinon.stub(uiProvider, 'displayLoading');
   sinon.stub(uiProvider, 'getStockSymbol').returns('TEST');
+  sinon.stub(uiProvider, 'init');
   sinon.stub(uiProvider, 'setStockPrice');
 
   stockRetriever = new StockRetriever(dataProvider, uiProvider);
@@ -32,14 +33,10 @@ test.afterEach(() => {
   fetchMock.restore();
 });
 
-test('init should create click handler on fetchButton selector', t => {
-  const selectors = stockRetriever.configuration.selectors;
-
-  sinon.stub(selectors.fetchButton, 'on');
-
+test('init should call UiProvider init', t => {
   stockRetriever.init();
 
-  t.true(selectors.fetchButton.on.calledWith('click', sinon.match.func));
+  t.true(uiProvider.init.calledOnce);
 });
 
 test('fetch should get stock symbol', t => {

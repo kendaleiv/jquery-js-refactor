@@ -11,6 +11,14 @@ test.beforeEach(() => {
   selectors = uiProvider.configuration.selectors;
 });
 
+test('init should create click handler on fetchButton selector', t => {
+  sinon.stub(selectors.fetchButton, 'on');
+
+  uiProvider.init();
+
+  t.true(selectors.fetchButton.on.calledWith('click', sinon.match.func));
+});
+
 test('displayLoading should display loading for current stock price', t => {
   sinon.stub(selectors.currentStockPrice, 'html');
 
