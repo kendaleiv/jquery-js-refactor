@@ -12,12 +12,12 @@ export default class UiProvider {
     };
   }
 
-  init() {
+  init(stockRetriever) {
     const selectors = this.configuration.selectors;
 
     $(() => {
       selectors.fetchButton.on('click', () => {
-        this.fetch();
+        stockRetriever.fetch();
       });
     });
   }

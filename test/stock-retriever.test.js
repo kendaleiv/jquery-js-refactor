@@ -14,8 +14,7 @@ test.beforeEach(() => {
   dataProvider = new DataProvider();
   uiProvider = new UiProvider();
 
-  const response = `<?xml version="1.0" encoding="UTF-8"?>
-<query><results><quote symbol="TEST"><LastTradePriceOnly>123.45</LastTradePriceOnly></quote></results></query>`;
+  const response = '{ "latestPrice": "123.45" }';
 
   fetchMock.get('*', response);
 

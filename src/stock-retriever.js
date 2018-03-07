@@ -5,7 +5,7 @@ export default class StockRetriever {
   }
 
   init() {
-    this.uiProvider.init();
+    this.uiProvider.init(this);
   }
 
   fetch() {
