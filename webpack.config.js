@@ -1,14 +1,16 @@
+const path = require('path');
+
 module.exports = {
   entry: [
     'whatwg-fetch',
     './src/index.js'
   ],
   output: {
-    path: './public/webpack-output',
+    path: path.join(__dirname, './public/webpack-output'),
     filename: 'bundle.js'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,

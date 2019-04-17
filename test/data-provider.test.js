@@ -1,27 +1,23 @@
-import test from 'ava';
-import fetchMock from 'fetch-mock';
+global.fetch = require('jest-fetch-mock');
 
 import DataProvider from '../src/data-provider';
 
-test.beforeEach(() => {
-  const response = `<?xml version="1.0" encoding="UTF-8"?>
-<query><results><quote symbol="TEST"><LastTradePriceOnly>123.45</LastTradePriceOnly></quote></results></query>`;
-
-  fetchMock.get('*', response);
+beforeEach(() => {
+  fetch.mockResponse('{ "latestPrice": "123.45" }');
 });
 
-test.afterEach(() => {
-  fetchMock.restore();
+afterEach(() => {
+  fetch.resetMocks();
 });
 
-test('should return stock price', t => {
+test('should return stock price', () => {
   return new DataProvider()
     .getStockPrice('TEST')
     .then(lastTradePrice => {
-      t.is(lastTradePrice, '123.45');
+      expect(lastTradePrice).toBe('123.45');
     });
 });
 
-test('should throw Error for missing stockSymbol', t => {
-  t.throws(() => new DataProvider().getStockPrice());
+test('should throw Error for missing stockSymbol', () => {
+  expect(() => new DataProvider().getStockPrice()).toThrow();
 });

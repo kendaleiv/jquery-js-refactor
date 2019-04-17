@@ -1,5 +1,4 @@
-import test from 'ava';
-import fetchMock from 'fetch-mock';
+global.fetch = require('jest-fetch-mock');
 import sinon from 'sinon';
 
 import StockRetriever from '../src/stock-retriever';
@@ -10,55 +9,52 @@ let stockRetriever;
 let dataProvider;
 let uiProvider;
 
-test.beforeEach(() => {
+beforeEach(() => {
   dataProvider = new DataProvider();
   uiProvider = new UiProvider();
 
-  const response = `<?xml version="1.0" encoding="UTF-8"?>
-<query><results><quote symbol="TEST"><LastTradePriceOnly>123.45</LastTradePriceOnly></quote></results></query>`;
+  fetch.mockResponse('{ "latestPrice": "123.45" }');
 
-  fetchMock.get('*', response);
+  // sinon.stub(dataProvider, 'getStockPrice', dataProvider.getStockPrice);
 
-  sinon.stub(dataProvider, 'getStockPrice', dataProvider.getStockPrice);
-
-  sinon.stub(uiProvider, 'displayLoading');
-  sinon.stub(uiProvider, 'getStockSymbol').returns('TEST');
-  sinon.stub(uiProvider, 'init');
-  sinon.stub(uiProvider, 'setStockPrice');
+  // sinon.stub(uiProvider, 'displayLoading');
+  // sinon.stub(uiProvider, 'getStockSymbol').returns('TEST');
+  // sinon.stub(uiProvider, 'init');
+  // sinon.stub(uiProvider, 'setStockPrice');
 
   stockRetriever = new StockRetriever(dataProvider, uiProvider);
 });
 
-test.afterEach(() => {
-  fetchMock.restore();
+afterEach(() => {
+  fetch.resetMocks();
 });
 
-test('init should call UiProvider init', t => {
+test('init should call UiProvider init', () => {
   stockRetriever.init();
 
-  t.true(uiProvider.init.calledOnce);
+  expect(uiProvider.init.calledOnce).toBe(true);
 });
 
-test('fetch should get stock symbol', t => {
+test('fetch should get stock symbol', () => {
   return stockRetriever.fetch().then(() => {
-    t.true(uiProvider.getStockSymbol.calledOnce);
+    expect(uiProvider.getStockSymbol.calledOnce).toBe(true);
   });
 });
 
-test('fetch should display loading', t => {
+test('fetch should display loading', () => {
   return stockRetriever.fetch().then(() => {
-    t.true(uiProvider.displayLoading.calledOnce);
+    expect(uiProvider.displayLoading.calledOnce).toBe(true);
   });
 });
 
-test('fetch should get stock price', t => {
+test('fetch should get stock price', () => {
   return stockRetriever.fetch().then(() => {
-    t.true(dataProvider.getStockPrice.calledWith('TEST'));
+    expect(dataProvider.getStockPrice.calledWith('TEST')).toBe(true);
   });
 });
 
-test('fetch should update stock price information', t => {
+test('fetch should update stock price information', () => {
   return stockRetriever.fetch().then(() => {
-    t.true(uiProvider.setStockPrice.calledWith('TEST', '123.45'));
+    expect(uiProvider.setStockPrice.calledWith('TEST', '123.45')).toBe(true);
   });
 });

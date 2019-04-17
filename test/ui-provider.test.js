@@ -1,4 +1,3 @@
-import test from 'ava';
 import sinon from 'sinon';
 
 import UiProvider from '../src/ui-provider';
@@ -6,63 +5,63 @@ import UiProvider from '../src/ui-provider';
 let uiProvider;
 let selectors;
 
-test.beforeEach(() => {
+beforeEach(() => {
   uiProvider = new UiProvider();
   selectors = uiProvider.configuration.selectors;
 });
 
-test('init should create click handler on fetchButton selector', t => {
+test('init should create click handler on fetchButton selector', () => {
   sinon.stub(selectors.fetchButton, 'on');
 
   uiProvider.init();
 
-  t.true(selectors.fetchButton.on.calledWith('click', sinon.match.func));
+  expect(selectors.fetchButton.on.calledWith('click', sinon.match.func)).toBe(true);
 });
 
-test('displayLoading should display loading for current stock price', t => {
+test('displayLoading should display loading for current stock price', () => {
   sinon.stub(selectors.currentStockPrice, 'html');
 
   uiProvider.displayLoading();
 
-  t.true(selectors.currentStockPrice.html.calledWith('Loading ...'));
+  expect(selectors.currentStockPrice.html.calledWith('Loading ...')).toBe(true);
 });
 
-test('getStockSymbol should get stock symbol from DOM', t => {
+test('getStockSymbol should get stock symbol from DOM', () => {
   sinon.stub(selectors.stockSymbol, 'val').returns('GOOG');
 
   const stockSymbol = uiProvider.getStockSymbol();
 
-  t.is(stockSymbol, 'GOOG');
+  expect(stockSymbol).toBe('GOOG');
 });
 
-test('getStockSymbol should toUpperCase stock symbol', t => {
+test('getStockSymbol should toUpperCase stock symbol', () => {
   sinon.stub(selectors.stockSymbol, 'val').returns('goog');
 
   const stockSymbol = uiProvider.getStockSymbol();
 
-  t.is(stockSymbol, 'GOOG');
+  expect(stockSymbol).toBe('GOOG');
 });
 
-test('getStockSymbol should trim stock symbol', t => {
+test('getStockSymbol should trim stock symbol', () => {
   sinon.stub(selectors.stockSymbol, 'val').returns(' GOOG ');
 
   const stockSymbol = uiProvider.getStockSymbol();
 
-  t.is(stockSymbol, 'GOOG');
+  expect(stockSymbol).toBe('GOOG');
 });
 
-test('setStockPrice should update current stock price', t => {
+test('setStockPrice should update current stock price', () => {
   sinon.stub(selectors.currentStockPrice, 'html');
 
   uiProvider.setStockPrice('GOOG', 1000.00);
 
-  t.true(selectors.currentStockPrice.html.calledOnce);
+  expect(selectors.currentStockPrice.html.calledOnce).toBe(true);
 });
 
-test('setStockPrice should append stock price to log', t => {
+test('setStockPrice should append stock price to log', () => {
   sinon.stub(selectors.stockPriceLog, 'html');
 
   uiProvider.setStockPrice('GOOG', 1000.00);
 
-  t.true(selectors.stockPriceLog.html.calledTwice);
+  expect(selectors.stockPriceLog.html.calledTwice).toBe(true);
 });
