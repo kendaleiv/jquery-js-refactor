@@ -10,6 +10,6 @@ This repository contains these talks in a combined fashion:
 
 ## Writing Better jQuery Infused JavaScript
 
-**Code:** [**master**](https://github.com/kendaleiv/jquery-js-refactor/tree/master) branch
+**Code:** [**main**](https://github.com/kendaleiv/jquery-js-refactor/tree/main) branch
 
 **Presentation:** See files at [74face0](https://github.com/kendaleiv/jquery-js-refactor/tree/74face0d1b04b359520f2386d169885a6923d574)
